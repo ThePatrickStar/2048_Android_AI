@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_main"
+    android:paddingTop="@dimen/margin_whole_screen"
+    android:paddingBottom="@dimen/margin_whole_screen"
+    android:orientation="vertical" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <RelativeLayout
+        android:id="@+id/rl_bar"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <TextView
+            android:textSize="22sp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/md_red_300"
+            android:text="@string/title_player_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_between_contents"
+        android:layout_below="@id/rl_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!--<com.lyk.ai_2048.component.Grid-->
+        <!--android:id="@+id/gl_main"-->
+        <!--android:background="@color/md_brown_500"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="400dp"-->
+        <!--android:columnCount="4"-->
+        <!--android:rowCount="4">-->
+    <!--</com.lyk.ai_2048.component.Grid>-->
+
+
+</RelativeLayout>
