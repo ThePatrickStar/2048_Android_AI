@@ -2,4 +2,5 @@
 <resources>
     <dimen name="margin_between_contents">8dp</dimen>
     <dimen name="margin_whole_screen">16dp</dimen>
+    <dimen name="size_touchable">48dp</dimen>
 </resources>

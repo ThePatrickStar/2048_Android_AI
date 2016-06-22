@@ -6,13 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lyk.ai_2048.R;
 import com.lyk.ai_2048.component.Grid;
+import com.lyk.ai_2048.component.NumberGrid;
 import com.lyk.ai_2048.util.InfoHolder;
 
 /**
@@ -22,6 +25,7 @@ public class MainGameActivity extends AppCompatActivity{
     private static final String TAG = "MainGameActivity";
 
     private Grid grid;
+    private NumberGrid numberGrid;
 
     private int score = 0;
 
@@ -62,13 +66,31 @@ public class MainGameActivity extends AppCompatActivity{
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.rl_main);
 
         grid = new Grid(this);
+        numberGrid = new NumberGrid(this);
 
         if (rl != null) {
             rl.addView(grid);
+            rl.addView(numberGrid);
         }
         else {
             Log.d(TAG,"ll_main is null!");
         }
+
+
+        numberGrid.generateNumber();
+        numberGrid.generateNumber();
+
+        ImageButton ibRefresh = (ImageButton) findViewById(R.id.ib_refresh);
+        ibRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                score = 0;
+                setScoreDisplay();
+                numberGrid.resetDisplay();
+                numberGrid.generateNumber();
+                numberGrid.generateNumber();
+            }
+        });
     }
 
     private void setScoreDisplay(){
