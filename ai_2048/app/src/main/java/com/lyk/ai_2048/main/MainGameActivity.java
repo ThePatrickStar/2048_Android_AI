@@ -1,6 +1,7 @@
 package com.lyk.ai_2048.main;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -14,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lyk.ai_2048.R;
+import com.lyk.ai_2048.base.ScoreHolder;
 import com.lyk.ai_2048.component.Grid;
 import com.lyk.ai_2048.component.NumberGrid;
 import com.lyk.ai_2048.component.TouchLayer;
@@ -23,7 +25,7 @@ import com.lyk.ai_2048.util.OnSwipeTouchListener;
 /**
  * Created by lyk on 22/6/16.
  */
-public class MainGameActivity extends AppCompatActivity{
+public class MainGameActivity extends AppCompatActivity implements ScoreHolder{
     private static final String TAG = "MainGameActivity";
 
     private Grid grid;
@@ -69,6 +71,7 @@ public class MainGameActivity extends AppCompatActivity{
 
         grid = new Grid(this);
         numberGrid = new NumberGrid(this);
+        numberGrid.setScoreHolder(this);
         TouchLayer touchLayer = new TouchLayer(this);
         touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeTop() {
@@ -79,6 +82,7 @@ public class MainGameActivity extends AppCompatActivity{
             }
             public void onSwipeLeft() {
                 Log.d(TAG, "swiped left");
+                numberGrid.moveLeft();
             }
             public void onSwipeBottom() {
                 Log.d(TAG, "swiped bottom");
@@ -104,7 +108,7 @@ public class MainGameActivity extends AppCompatActivity{
             public void onClick(View v) {
                 score = 0;
                 setScoreDisplay();
-                numberGrid.resetDisplay();
+                numberGrid.init();
                 numberGrid.generateNumber();
                 numberGrid.generateNumber();
             }
@@ -115,5 +119,11 @@ public class MainGameActivity extends AppCompatActivity{
         TextView tvScore = (TextView) findViewById(R.id.tv_score);
         String scoreText = String.format(getResources().getString(R.string.tag_score), score);
         tvScore.setText(Html.fromHtml(scoreText), TextView.BufferType.SPANNABLE);
+    }
+
+    @Override
+    public void updateScore(int score) {
+        this.score = score;
+        setScoreDisplay();
     }
 }

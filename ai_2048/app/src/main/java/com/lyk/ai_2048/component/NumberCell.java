@@ -12,7 +12,7 @@ import com.lyk.ai_2048.R;
  * Created by lyk on 22/6/16.
  */
 public class NumberCell extends TextView {
-    private int number;
+    private int number, row, col;
 
     public NumberCell(Context context) {
         super(context);
@@ -23,7 +23,7 @@ public class NumberCell extends TextView {
         this.setTypeface(null, Typeface.BOLD);
     }
 
-    public static int getCellBg(int number){
+    private int getCellBg(int number){
         switch(number){
             case 0:
                 return R.drawable.bg_0;
@@ -64,6 +64,7 @@ public class NumberCell extends TextView {
 
     public void setNumber(int number) {
         this.number = number;
+        this.setBackgroundResource(getCellBg(number));
         if (number != 0){
             this.setText(String.valueOf(number));
             this.setTextColor(ContextCompat.getColor(getContext(),R.color.md_white_1000));
@@ -80,5 +81,24 @@ public class NumberCell extends TextView {
                 this.setTextSize(15);
             }
         }
+        else{
+            this.setAlpha(0);
+        }
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
     }
 }

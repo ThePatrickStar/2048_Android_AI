@@ -1,12 +1,17 @@
 package com.lyk.ai_2048.component;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 
+import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.lyk.ai_2048.base.ScoreHolder;
 import com.lyk.ai_2048.util.InfoHolder;
 
 import java.util.ArrayList;
@@ -19,12 +24,14 @@ public class NumberGrid extends GridLayout {
     private static final String TAG = "NumberGrid";
 
     private ArrayList<NumberCell> cells;
+    private int[][] board;
+    private boolean[][] hasConflicted;
+    private int score;
 
-    private Context context;
+    private ScoreHolder scoreHolder;
 
     public NumberGrid(Context context) {
         super(context);
-        this.context = context;
         setUpDisplay();
     }
 
@@ -43,23 +50,39 @@ public class NumberGrid extends GridLayout {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(InfoHolder.getGridSize(),InfoHolder.getGridSize());
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         this.setLayoutParams(params);
-        this.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+        this.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
         this.setColumnCount(4);
         this.setRowCount(4);
 
-        initCells();
+        init();
     }
 
-    private void initCells(){
+    public void init(){
+        board = new int[4][4];
+        hasConflicted = new boolean[4][4];
+        score = 0;
+
+        for (int i=0; i<4; i++) {
+            for (int j = 0; j < 4; j++) {
+                board[i][j] = 0;
+            }
+        }
+
+        updateCells();
+    }
+
+    private void updateCells(){
+        this.removeAllViews();
+
         cells = new ArrayList<>();
 
         int padding = InfoHolder.getGridPadding();
         for (int i=0; i<4; i++){
             for (int j=0; j<4; j++){
 
-                NumberCell cell = new NumberCell(context);
+                NumberCell cell = new NumberCell(getContext());
 
-                cell.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+                cell.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
 
                 GridLayout.LayoutParams gLayoutParams = new GridLayout.LayoutParams(GridLayout.spec(i, GridLayout.CENTER),
                         GridLayout.spec(j, GridLayout.CENTER));
@@ -78,16 +101,149 @@ public class NumberGrid extends GridLayout {
 
                 cell.setLayoutParams(gLayoutParams);
 
+                cell.setRow(i);
+                cell.setCol(j);
+
+                cell.setNumber(board[i][j]);
+
                 this.addView(cell);
 
                 cells.add(cell);
+                hasConflicted[i][j] = false;
             }
+        }
+
+        //Log.d(TAG, "updated cells");
+
+    }
+
+    private boolean canMoveLeft(){
+        for (int i=0; i<4; i++){
+            for (int j=1; j<4; j++){
+                if(board[i][j]!=0){
+                    if (board[i][j-1]==0 || board[i][j] == board[i][j-1])
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean canMoveRight(){
+        for (int i=0; i<4; i++){
+            for (int j=0; j<3; j++){
+                if(board[i][j]!=0){
+                    if (board[i][j+1]==0 || board[i][j] == board[i][j+1])
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean canMoveUp(){
+        for (int i=1; i<4; i++){
+            for (int j=0; j<4; j++){
+                if(board[i][j]!=0){
+                    if (board[i-1][j]==0 || board[i][j] == board[i-1][j])
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean canMoveDown(){
+        for (int i=0; i<3; i++){
+            for (int j=0; j<4; j++){
+                if(board[i][j]!=0){
+                    if (board[i+1][j]==0 || board[i][j] == board[i+1][j])
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void moveLeft(){
+        ArrayList<NumberCell> startCells = new ArrayList<>();
+        ArrayList<NumberCell> endCells = new ArrayList<>();
+        if(!canMoveLeft())
+            return;
+
+        for(int i=0; i<4; i++){
+            for(int j=1; j<4; j++){
+                if(board[i][j]!=0){
+                    for(int k=0; k<j; k++){
+                        if(board[i][k] == 0 && noBlockHorizontal(i, k, j)){
+                            Log.d(TAG, "moving left ...");
+                            startCells.add(cells.get(4*i+j));
+                            endCells.add(cells.get(4*i+k));
+                            //showMoveAnimation(i, j, i, k);
+                            board[i][k]=board[i][j];
+                            board[i][j]=0;
+                            break;
+                        }
+                        else if (board[i][k] == board[i][j] && noBlockHorizontal(i, k, j) && !hasConflicted[i][k]){
+                            Log.d(TAG, "merging left ...");
+                            startCells.add(cells.get(4*i+j));
+                            endCells.add(cells.get(4*i+k));
+                            //showMoveAnimation(i, j, i, k);
+                            board[i][k]+=board[i][j];
+                            board[i][j]=0;
+                            score += board[i][k];
+                            scoreHolder.updateScore(score);
+                            hasConflicted[i][k] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        showMoveAnimations(startCells, endCells);
+    }
+
+    private void showMoveAnimations(ArrayList<NumberCell> startCells, ArrayList<NumberCell> endCells){
+        for (int i = 0; i<startCells.size(); i++){
+            float transX = endCells.get(i).getX() - startCells.get(i).getX();
+            float transY = endCells.get(i).getY() - startCells.get(i).getY();
+
+            if(i == startCells.size()-1){
+                ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
+                        .duration(250).onStop(new AnimationListener.Stop() {
+                    @Override
+                    public void onStop() {
+                        updateCells();
+                        generateNumber();
+                    }
+                }).start();
+            }
+            else{
+                ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
+                        .duration(250).start();
+            }
+
+
+
+
         }
     }
 
-    public void resetDisplay(){
-        this.removeAllViews();
-        initCells();
+    private boolean noBlockHorizontal(int row, int col1, int col2){
+        for (int i = col1+1; i< col2; i++){
+            if (board[row][i]!=0)
+                return false;
+        }
+        return true;
+    }
+
+    private boolean noBlockVertical(int col, int row1, int row2){
+        for (int i=row1+1;i<row2; i++){
+            if (board[i][col]!=0)
+                return false;
+        }
+        return true;
     }
 
     public void generateNumber(){
@@ -98,20 +254,30 @@ public class NumberGrid extends GridLayout {
             }
         }
         if (emptyCells.size()==0){
+            Log.d(TAG, "no more available cells");
             return;
         }
         else{
+
             int position = (int) (Math.random()*emptyCells.size());
+
             NumberCell cell = emptyCells.get(position);
+
 
             int randNum = Math.random() < 0.5 ? 2:4;
 
             cell.setNumber(randNum);
 
-            cell.setBackgroundResource(NumberCell.getCellBg(randNum));
+            board[cell.getRow()][cell.getCol()] = randNum;
 
-            ViewAnimator.animate(cell).scale(0, 1).duration(50).start();
+            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(50).start();
+
+            //Log.d(TAG, "generating a number at : "+cell.getRow()+", "+cell.getCol()+" --- "+randNum);
 
         }
+    }
+
+    public void setScoreHolder(ScoreHolder scoreHolder) {
+        this.scoreHolder = scoreHolder;
     }
 }
