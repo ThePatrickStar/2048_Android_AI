@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.TextView;
 
 import com.lyk.ai_2048.R;
@@ -24,32 +23,36 @@ public class NumberCell extends TextView {
         this.setTypeface(null, Typeface.BOLD);
     }
 
-    public static int getCellColor(int number){
+    public static int getCellBg(int number){
         switch(number){
             case 0:
-                return android.R.color.transparent;
+                return R.drawable.bg_0;
             case 2:
-                return R.color.md_amber_300;
+                return R.drawable.bg_2;
             case 4:
-                return R.color.md_amber_600;
+                return R.drawable.bg_4;
             case 8:
-                return R.color.md_orange_500;
+                return R.drawable.bg_8;
             case 16:
-                return R.color.md_orange_A700;
+                return R.drawable.bg_16;
             case 32:
-                return R.color.md_deep_orange_500;
+                return R.drawable.bg_32;
             case 64:
-                return R.color.md_deep_orange_A700;
+                return R.drawable.bg_64;
             case 128:
-                return R.color.md_purple_500;
+                return R.drawable.bg_128;
             case 256:
-                return R.color.md_indigo_500;
+                return R.drawable.bg_256;
             case 512:
-                return R.color.md_blue_700;
+                return R.drawable.bg_512;
             case 1024:
-                return R.color.md_blue_300;
+                return R.drawable.bg_1024;
             case 2048:
-                return R.color.md_blue_grey_500;
+                return R.drawable.bg_2048;
+            case 4096:
+                return R.drawable.bg_4096;
+            case 8192:
+                return R.drawable.bg_8192;
             default:
                 return R.color.md_black_1000;
         }
@@ -63,7 +66,11 @@ public class NumberCell extends TextView {
         this.number = number;
         if (number != 0){
             this.setText(String.valueOf(number));
+            this.setTextColor(ContextCompat.getColor(getContext(),R.color.md_white_1000));
             if(number < 1000){
+                if(number <= 4){
+                    this.setTextColor(ContextCompat.getColor(getContext(),R.color.color_special_number));
+                }
                 this.setTextSize(35);
             }
             else if (number < 10000){

@@ -7,7 +7,6 @@ import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 
 import com.github.florent37.viewanimator.ViewAnimator;
-import com.lyk.ai_2048.R;
 import com.lyk.ai_2048.util.InfoHolder;
 
 import java.util.ArrayList;
@@ -109,11 +108,9 @@ public class NumberGrid extends GridLayout {
 
             cell.setNumber(randNum);
 
+            cell.setBackgroundResource(NumberCell.getCellBg(randNum));
 
-            ViewAnimator.animate(cell).backgroundColor(
-                    ContextCompat.getColor(context,android.R.color.transparent),
-                    ContextCompat.getColor(context,NumberCell.getCellColor(cell.getNumber())))
-                    .scale(0, 1).duration(50).start();
+            ViewAnimator.animate(cell).scale(0, 1).duration(50).start();
 
         }
     }
