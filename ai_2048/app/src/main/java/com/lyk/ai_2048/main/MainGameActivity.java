@@ -76,9 +76,11 @@ public class MainGameActivity extends AppCompatActivity implements ScoreHolder{
         touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeTop() {
                 Log.d(TAG, "swiped top");
+                numberGrid.moveUp();
             }
             public void onSwipeRight() {
                 Log.d(TAG, "swiped right");
+                numberGrid.moveRight();
             }
             public void onSwipeLeft() {
                 Log.d(TAG, "swiped left");
@@ -86,6 +88,7 @@ public class MainGameActivity extends AppCompatActivity implements ScoreHolder{
             }
             public void onSwipeBottom() {
                 Log.d(TAG, "swiped bottom");
+                numberGrid.moveDown();
             }
         });
 

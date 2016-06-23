@@ -204,6 +204,116 @@ public class NumberGrid extends GridLayout {
         showMoveAnimations(startCells, endCells);
     }
 
+    public void moveRight(){
+        ArrayList<NumberCell> startCells = new ArrayList<>();
+        ArrayList<NumberCell> endCells = new ArrayList<>();
+        if(!canMoveRight())
+            return;
+
+        for( int i = 0; i < 4 ; i ++ ){
+            for( int j = 2; j >= 0; j -- ){
+                if( board[i][j] != 0 ){
+                    for(int k = 3; k > j; k--){
+                        if( board[i][k] == 0 && noBlockHorizontal(i, j, k) ){
+                            Log.d(TAG, "moving right ...");
+                            startCells.add(cells.get(4*i+j));
+                            endCells.add(cells.get(4*i+k));
+                            board[i][k] = board[i][j];
+                            board[i][j] = 0;
+                            break;
+                        }
+                        else if( board[i][k] == board[i][j] && noBlockHorizontal(i, j, k) && !hasConflicted[i][k] ){
+                            Log.d(TAG, "merging right ...");
+                            startCells.add(cells.get(4*i+j));
+                            endCells.add(cells.get(4*i+k));
+                            board[i][k] *= 2;
+                            board[i][j] = 0;
+                            score += board[i][k];
+                            scoreHolder.updateScore(score);
+                            hasConflicted[i][k] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        showMoveAnimations(startCells, endCells);
+    }
+
+    public void moveUp(){
+        ArrayList<NumberCell> startCells = new ArrayList<>();
+        ArrayList<NumberCell> endCells = new ArrayList<>();
+        if(!canMoveUp())
+            return;
+
+        for(int j = 0 ; j < 4 ; j ++ ) {
+            for (int i = 1; i < 4; i++) {
+                if (board[i][j] != 0) {
+                    for (int k = 0; k < i; k++) {
+                        if (board[k][j] == 0 && noBlockVertical(j, k, i)) {
+                            Log.d(TAG, "moving up ...");
+                            startCells.add(cells.get(4*i+j));
+                            endCells.add(cells.get(4*k+j));
+                            board[k][j] = board[i][j];
+                            board[i][j] = 0;
+                            break;
+                        } else if (board[k][j] == board[i][j] && noBlockVertical(j, k, i) && !hasConflicted[k][j]) {
+                            Log.d(TAG, "merging up ...");
+                            startCells.add(cells.get(4*i+j));
+                            endCells.add(cells.get(4*k+j));
+                            board[k][j] *= 2;
+                            board[i][j] = 0;
+                            score += board[k][j];
+                            scoreHolder.updateScore(score);
+                            hasConflicted[k][j] = true;
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        showMoveAnimations(startCells, endCells);
+    }
+
+    public void moveDown(){
+        ArrayList<NumberCell> startCells = new ArrayList<>();
+        ArrayList<NumberCell> endCells = new ArrayList<>();
+        if(!canMoveDown())
+            return;
+
+        for(int j = 0; j < 4; j++) {
+            for (int i = 2; i >= 0; i--) {
+                if (board[i][j] != 0) {
+                    for (int k = 3; k > i; k--) {
+                        if (board[k][j] == 0 && noBlockVertical(j, i, k)) {
+                            Log.d(TAG, "moving down ...");
+                            startCells.add(cells.get(4*i+j));
+                            endCells.add(cells.get(4*k+j));
+                            board[k][j] = board[i][j];
+                            board[i][j] = 0;
+                            break;
+                        } else if (board[k][j] == board[i][j] && noBlockVertical(j, i, k) && !hasConflicted[k][j]) {
+                            Log.d(TAG, "merging down ...");
+                            startCells.add(cells.get(4*i+j));
+                            endCells.add(cells.get(4*k+j));
+                            board[k][j] *= 2;
+                            board[i][j] = 0;
+                            score += board[k][j];
+                            scoreHolder.updateScore(score);
+                            hasConflicted[k][j] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        showMoveAnimations(startCells, endCells);
+    }
+
     private void showMoveAnimations(ArrayList<NumberCell> startCells, ArrayList<NumberCell> endCells){
         for (int i = 0; i<startCells.size(); i++){
             float transX = endCells.get(i).getX() - startCells.get(i).getX();
