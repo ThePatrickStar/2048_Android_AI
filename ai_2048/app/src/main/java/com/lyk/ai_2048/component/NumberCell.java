@@ -54,7 +54,7 @@ public class NumberCell extends TextView {
             case 8192:
                 return R.drawable.bg_8192;
             default:
-                return R.color.md_black_1000;
+                return R.drawable.bg_otherwise;
         }
     }
 

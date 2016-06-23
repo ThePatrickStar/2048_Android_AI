@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.lyk.ai_2048.R;
 import com.lyk.ai_2048.component.Grid;
 import com.lyk.ai_2048.component.NumberGrid;
+import com.lyk.ai_2048.component.TouchLayer;
 import com.lyk.ai_2048.util.InfoHolder;
+import com.lyk.ai_2048.util.OnSwipeTouchListener;
 
 /**
  * Created by lyk on 22/6/16.
@@ -67,10 +69,26 @@ public class MainGameActivity extends AppCompatActivity{
 
         grid = new Grid(this);
         numberGrid = new NumberGrid(this);
+        TouchLayer touchLayer = new TouchLayer(this);
+        touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
+            public void onSwipeTop() {
+                Log.d(TAG, "swiped top");
+            }
+            public void onSwipeRight() {
+                Log.d(TAG, "swiped right");
+            }
+            public void onSwipeLeft() {
+                Log.d(TAG, "swiped left");
+            }
+            public void onSwipeBottom() {
+                Log.d(TAG, "swiped bottom");
+            }
+        });
 
         if (rl != null) {
             rl.addView(grid);
             rl.addView(numberGrid);
+            rl.addView(touchLayer);
         }
         else {
             Log.d(TAG,"ll_main is null!");
