@@ -1,7 +1,6 @@
 package com.lyk.ai_2048.main;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -15,23 +14,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lyk.ai_2048.R;
-import com.lyk.ai_2048.base.ScoreHolder;
+import com.lyk.ai_2048.base.GameHolder;
 import com.lyk.ai_2048.component.Grid;
 import com.lyk.ai_2048.component.NumberGrid;
 import com.lyk.ai_2048.component.TouchLayer;
 import com.lyk.ai_2048.util.InfoHolder;
 import com.lyk.ai_2048.util.OnSwipeTouchListener;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * Created by lyk on 22/6/16.
  */
-public class MainGameActivity extends AppCompatActivity implements ScoreHolder{
+public class MainGameActivity extends AppCompatActivity implements GameHolder {
     private static final String TAG = "MainGameActivity";
 
     private Grid grid;
     private NumberGrid numberGrid;
 
     private int score = 0;
+
+    private SweetAlertDialog sDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class MainGameActivity extends AppCompatActivity implements ScoreHolder{
 
         grid = new Grid(this);
         numberGrid = new NumberGrid(this);
-        numberGrid.setScoreHolder(this);
+        numberGrid.setGameHolder(this);
         TouchLayer touchLayer = new TouchLayer(this);
         touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeTop() {
@@ -109,13 +112,48 @@ public class MainGameActivity extends AppCompatActivity implements ScoreHolder{
         ibRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                score = 0;
-                setScoreDisplay();
-                numberGrid.init();
-                numberGrid.generateNumber();
-                numberGrid.generateNumber();
+                sDialog = new SweetAlertDialog(MainGameActivity.this, SweetAlertDialog.WARNING_TYPE);
+
+                sDialog.setTitleText(getResources().getString(R.string.title_new_game));
+                sDialog.setContentText(getResources().getString(R.string.info_new_game));
+                sDialog.setConfirmText(getResources().getString(R.string.btn_confirm));
+                sDialog.setCancelText(getResources().getString(R.string.btn_cancel));
+                sDialog.setCancelable(false);
+
+                sDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                });
+
+                sDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        resetGame();
+                        sDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        sDialog.setContentText(getResources().getString(R.string.info_game_reseted));
+                        sDialog.showCancelButton(false);
+                        sDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sDialog.dismissWithAnimation();
+                            }
+                        });
+                    }
+                });
+                sDialog.show();
             }
         });
+    }
+
+    @Override
+    public void resetGame(){
+        score = 0;
+        setScoreDisplay();
+        numberGrid.init();
+        numberGrid.generateNumber();
+        numberGrid.generateNumber();
     }
 
     private void setScoreDisplay(){

@@ -1,10 +1,7 @@
 package com.lyk.ai_2048.component;
 
 import android.content.Context;
-import android.graphics.Point;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.IntentCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.GridLayout;
@@ -12,10 +9,13 @@ import android.widget.RelativeLayout;
 
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
-import com.lyk.ai_2048.base.ScoreHolder;
+import com.lyk.ai_2048.R;
+import com.lyk.ai_2048.base.GameHolder;
 import com.lyk.ai_2048.util.InfoHolder;
 
 import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by lyk on 22/6/16.
@@ -29,10 +29,12 @@ public class NumberGrid extends GridLayout {
     private boolean[][] hasConflicted;
     private int score;
 
-    private ScoreHolder scoreHolder;
+    private GameHolder gameHolder;
 
     //for the move animation listener
     private int currentStep;
+
+    private SweetAlertDialog sDialog;
 
     public NumberGrid(Context context) {
         super(context);
@@ -181,7 +183,7 @@ public class NumberGrid extends GridLayout {
                 if(board[i][j]!=0){
                     for(int k=0; k<j; k++){
                         if(board[i][k] == 0 && noBlockHorizontal(i, k, j)){
-                            Log.d(TAG, "moving left ...");
+                            //Log.d(TAG, "moving left ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
                             //showMoveAnimation(i, j, i, k);
@@ -190,7 +192,7 @@ public class NumberGrid extends GridLayout {
                             break;
                         }
                         else if (board[i][k] == board[i][j] && noBlockHorizontal(i, k, j) && !hasConflicted[i][k]){
-                            Log.d(TAG, "merging left ...");
+                            //Log.d(TAG, "merging left ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
                             mergedCells.add(4*i+k);
@@ -198,7 +200,7 @@ public class NumberGrid extends GridLayout {
                             board[i][k]+=board[i][j];
                             board[i][j]=0;
                             score += board[i][k];
-                            scoreHolder.updateScore(score);
+                            gameHolder.updateScore(score);
                             hasConflicted[i][k] = true;
                             break;
                         }
@@ -222,7 +224,7 @@ public class NumberGrid extends GridLayout {
                 if( board[i][j] != 0 ){
                     for(int k = 3; k > j; k--){
                         if( board[i][k] == 0 && noBlockHorizontal(i, j, k) ){
-                            Log.d(TAG, "moving right ...");
+                            //Log.d(TAG, "moving right ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
                             board[i][k] = board[i][j];
@@ -230,14 +232,14 @@ public class NumberGrid extends GridLayout {
                             break;
                         }
                         else if( board[i][k] == board[i][j] && noBlockHorizontal(i, j, k) && !hasConflicted[i][k] ){
-                            Log.d(TAG, "merging right ...");
+                            //Log.d(TAG, "merging right ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
                             mergedCells.add(4*i+k);
                             board[i][k] *= 2;
                             board[i][j] = 0;
                             score += board[i][k];
-                            scoreHolder.updateScore(score);
+                            gameHolder.updateScore(score);
                             hasConflicted[i][k] = true;
                             break;
                         }
@@ -261,21 +263,21 @@ public class NumberGrid extends GridLayout {
                 if (board[i][j] != 0) {
                     for (int k = 0; k < i; k++) {
                         if (board[k][j] == 0 && noBlockVertical(j, k, i)) {
-                            Log.d(TAG, "moving up ...");
+                            //Log.d(TAG, "moving up ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
                             board[k][j] = board[i][j];
                             board[i][j] = 0;
                             break;
                         } else if (board[k][j] == board[i][j] && noBlockVertical(j, k, i) && !hasConflicted[k][j]) {
-                            Log.d(TAG, "merging up ...");
+                            //Log.d(TAG, "merging up ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
                             mergedCells.add(4*k+j);
                             board[k][j] *= 2;
                             board[i][j] = 0;
                             score += board[k][j];
-                            scoreHolder.updateScore(score);
+                            gameHolder.updateScore(score);
                             hasConflicted[k][j] = true;
                             break;
                         }
@@ -300,21 +302,21 @@ public class NumberGrid extends GridLayout {
                 if (board[i][j] != 0) {
                     for (int k = 3; k > i; k--) {
                         if (board[k][j] == 0 && noBlockVertical(j, i, k)) {
-                            Log.d(TAG, "moving down ...");
+                            //Log.d(TAG, "moving down ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
                             board[k][j] = board[i][j];
                             board[i][j] = 0;
                             break;
                         } else if (board[k][j] == board[i][j] && noBlockVertical(j, i, k) && !hasConflicted[k][j]) {
-                            Log.d(TAG, "merging down ...");
+                            //Log.d(TAG, "merging down ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
                             mergedCells.add(4*k+j);
                             board[k][j] *= 2;
                             board[i][j] = 0;
                             score += board[k][j];
-                            scoreHolder.updateScore(score);
+                            gameHolder.updateScore(score);
                             hasConflicted[k][j] = true;
                             break;
                         }
@@ -395,6 +397,24 @@ public class NumberGrid extends GridLayout {
         return true;
     }
 
+    private boolean noSpace(){
+        for (int i=0; i<4; i++){
+            for (int j=0; j<4; j++){
+                if(board[i][j] == 0)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean noMove(){
+        return !(canMoveDown() || canMoveLeft() || canMoveRight() || canMoveUp());
+    }
+
+    private boolean isGameOver(){
+        return noSpace() && noMove();
+    }
+
     public void generateNumber(){
         ArrayList<NumberCell> emptyCells = new ArrayList<>();
         for (NumberCell cell : cells){
@@ -419,14 +439,44 @@ public class NumberGrid extends GridLayout {
 
             board[cell.getRow()][cell.getCol()] = randNum;
 
-            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(200).start();
+            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(200).onStop(new AnimationListener.Stop() {
+                @Override
+                public void onStop() {
+                    if(isGameOver()){
+                        sDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
+
+                        sDialog.showCancelButton(false);
+                        sDialog.setCancelable(false);
+                        sDialog.setTitleText(getResources().getString(R.string.title_game_over));
+                        sDialog.setContentText(getResources().getString(R.string.info_game_over));
+
+                        sDialog.setConfirmText(getResources().getString(R.string.btn_confirm));
+                        sDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                gameHolder.resetGame();
+                                sDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                sDialog.setContentText(getResources().getString(R.string.info_game_reseted));
+                                sDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sDialog.dismissWithAnimation();
+                                    }
+                                });
+                            }
+                        });
+
+                        sDialog.show();
+                    }
+                }
+            }).start();
 
             //Log.d(TAG, "generating a number at : "+cell.getRow()+", "+cell.getCol()+" --- "+randNum);
 
         }
     }
 
-    public void setScoreHolder(ScoreHolder scoreHolder) {
-        this.scoreHolder = scoreHolder;
+    public void setGameHolder(GameHolder gameHolder) {
+        this.gameHolder = gameHolder;
     }
 }

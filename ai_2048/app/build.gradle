@@ -19,6 +19,11 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -26,6 +31,9 @@ dependencies {
 
     //view animator
     compile 'com.github.florent37:viewanimator:1.0.4'
+
+    //sweet dialog
+    compile 'cn.pedant.sweetalert:library:1.3'
 
 
 }
