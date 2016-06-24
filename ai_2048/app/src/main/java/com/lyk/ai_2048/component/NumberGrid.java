@@ -26,8 +26,10 @@ public class NumberGrid extends GridLayout {
 
     private ArrayList<NumberCell> cells;
     private int[][] board;
+    private int[][] revertBoard;
     private boolean[][] hasConflicted;
     private int score;
+    private int revertScore;
 
     private GameHolder gameHolder;
 
@@ -35,6 +37,9 @@ public class NumberGrid extends GridLayout {
     private int currentStep;
 
     private SweetAlertDialog sDialog;
+
+    private boolean revertible;
+
 
     public NumberGrid(Context context) {
         super(context);
@@ -64,9 +69,12 @@ public class NumberGrid extends GridLayout {
     }
 
     public void init(){
+        revertBoard = new int[4][4];
         board = new int[4][4];
         hasConflicted = new boolean[4][4];
         score = 0;
+        revertScore = 0;
+        revertible = false;
 
         for (int i=0; i<4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -75,6 +83,29 @@ public class NumberGrid extends GridLayout {
         }
 
         updateCells();
+    }
+
+    public void revertOneStep(){
+        if(revertible){
+            revertible = false;
+            score = revertScore;
+            gameHolder.updateScore(score);
+            for(int i=0; i<4; i++){
+                for(int j=0; j<4; j++){
+                    board[i][j] = revertBoard[i][j];
+                }
+            }
+            updateCells();
+        }
+    }
+
+    public void saveState(){
+        revertScore = score;
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                revertBoard[i][j] = board[i][j];
+            }
+        }
     }
 
     private void updateCells(){
@@ -109,6 +140,7 @@ public class NumberGrid extends GridLayout {
 
                 cell.setRow(i);
                 cell.setCol(j);
+
 
                 cell.setNumber(board[i][j]);
 
@@ -362,6 +394,7 @@ public class NumberGrid extends GridLayout {
 
     private void doAfterMove(int currentStep, int targetStep, ArrayList<Integer> mergedCells){
         if(currentStep >= targetStep){
+            revertible = true;
             updateCells();
             if(mergedCells.size()>0){
                 animateMerge(mergedCells);
@@ -433,7 +466,7 @@ public class NumberGrid extends GridLayout {
             NumberCell cell = emptyCells.get(position);
 
 
-            int randNum = Math.random() < 0.5 ? 2:4;
+            int randNum = Math.random() < 0.9 ? 2:4;
 
             cell.setNumber(randNum);
 

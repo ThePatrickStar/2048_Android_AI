@@ -7,6 +7,7 @@ import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -79,18 +80,22 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeTop() {
                 Log.d(TAG, "swiped top");
+                numberGrid.saveState();
                 numberGrid.moveUp();
             }
             public void onSwipeRight() {
                 Log.d(TAG, "swiped right");
+                numberGrid.saveState();
                 numberGrid.moveRight();
             }
             public void onSwipeLeft() {
                 Log.d(TAG, "swiped left");
+                numberGrid.saveState();
                 numberGrid.moveLeft();
             }
             public void onSwipeBottom() {
                 Log.d(TAG, "swiped bottom");
+                numberGrid.saveState();
                 numberGrid.moveDown();
             }
         });
@@ -109,6 +114,16 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         numberGrid.generateNumber();
 
         ImageButton ibRefresh = (ImageButton) findViewById(R.id.ib_refresh);
+        RelativeLayout.LayoutParams ibRLayoutParams = (RelativeLayout.LayoutParams) ibRefresh.getLayoutParams();
+        int deviceSize;
+        if(InfoHolder.getDeviceX() > InfoHolder.getDeviceY())
+            deviceSize = InfoHolder.getDeviceY();
+        else
+            deviceSize = InfoHolder.getDeviceX();
+
+        ibRLayoutParams.setMarginStart((deviceSize - InfoHolder.getGridSize())/2);
+        ibRefresh.setLayoutParams(ibRLayoutParams);
+
         ibRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,6 +160,22 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
                 sDialog.show();
             }
         });
+
+        ImageButton ibUndo = (ImageButton) findViewById(R.id.ib_undo);
+        RelativeLayout.LayoutParams ibULayoutParams = (RelativeLayout.LayoutParams) ibUndo.getLayoutParams();
+
+        ibULayoutParams.setMarginEnd((deviceSize - InfoHolder.getGridSize())/2);
+
+        ibUndo.setLayoutParams(ibULayoutParams);
+
+        ibUndo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                numberGrid.revertOneStep();
+            }
+        });
+
+
     }
 
     @Override
