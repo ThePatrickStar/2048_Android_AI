@@ -72,7 +72,7 @@ public class NumberCell extends TextView {
                 if(number <= 4){
                     this.setTextColor(ContextCompat.getColor(getContext(),R.color.color_special_number));
                 }
-                this.setTextSize(35);
+                this.setTextSize(30);
             }
             else if (number < 10000){
                 this.setTextSize(25);

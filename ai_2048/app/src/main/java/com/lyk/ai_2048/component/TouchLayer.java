@@ -18,7 +18,12 @@ public class TouchLayer extends View {
 
     //this grid must be put inside a relative layout
     private void setUpDisplay(){
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(InfoHolder.getGridSize(),InfoHolder.getGridSize());
+        int size;
+        if (InfoHolder.getDeviceX() > InfoHolder.getDeviceY())
+            size = InfoHolder.getDeviceY();
+        else
+            size = InfoHolder.getDeviceX();
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size, size);
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         this.setLayoutParams(params);
         this.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.IntentCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.GridLayout;
@@ -29,6 +30,9 @@ public class NumberGrid extends GridLayout {
     private int score;
 
     private ScoreHolder scoreHolder;
+
+    //for the move animation listener
+    private int currentStep;
 
     public NumberGrid(Context context) {
         super(context);
@@ -168,6 +172,7 @@ public class NumberGrid extends GridLayout {
     public void moveLeft(){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
+        ArrayList<Integer> mergedCells = new ArrayList<>();
         if(!canMoveLeft())
             return;
 
@@ -188,6 +193,7 @@ public class NumberGrid extends GridLayout {
                             Log.d(TAG, "merging left ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
+                            mergedCells.add(4*i+k);
                             //showMoveAnimation(i, j, i, k);
                             board[i][k]+=board[i][j];
                             board[i][j]=0;
@@ -201,12 +207,13 @@ public class NumberGrid extends GridLayout {
             }
         }
 
-        showMoveAnimations(startCells, endCells);
+        showMoveAnimations(startCells, endCells, mergedCells);
     }
 
     public void moveRight(){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
+        ArrayList<Integer> mergedCells = new ArrayList<>();
         if(!canMoveRight())
             return;
 
@@ -226,6 +233,7 @@ public class NumberGrid extends GridLayout {
                             Log.d(TAG, "merging right ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
+                            mergedCells.add(4*i+k);
                             board[i][k] *= 2;
                             board[i][j] = 0;
                             score += board[i][k];
@@ -238,12 +246,13 @@ public class NumberGrid extends GridLayout {
             }
         }
 
-        showMoveAnimations(startCells, endCells);
+        showMoveAnimations(startCells, endCells, mergedCells);
     }
 
     public void moveUp(){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
+        ArrayList<Integer> mergedCells = new ArrayList<>();
         if(!canMoveUp())
             return;
 
@@ -262,6 +271,7 @@ public class NumberGrid extends GridLayout {
                             Log.d(TAG, "merging up ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
+                            mergedCells.add(4*k+j);
                             board[k][j] *= 2;
                             board[i][j] = 0;
                             score += board[k][j];
@@ -275,12 +285,13 @@ public class NumberGrid extends GridLayout {
             }
         }
 
-        showMoveAnimations(startCells, endCells);
+        showMoveAnimations(startCells, endCells, mergedCells);
     }
 
     public void moveDown(){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
+        ArrayList<Integer> mergedCells = new ArrayList<>();
         if(!canMoveDown())
             return;
 
@@ -299,6 +310,7 @@ public class NumberGrid extends GridLayout {
                             Log.d(TAG, "merging down ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
+                            mergedCells.add(4*k+j);
                             board[k][j] *= 2;
                             board[i][j] = 0;
                             score += board[k][j];
@@ -311,33 +323,60 @@ public class NumberGrid extends GridLayout {
             }
         }
 
-        showMoveAnimations(startCells, endCells);
+        showMoveAnimations(startCells, endCells, mergedCells);
     }
 
-    private void showMoveAnimations(ArrayList<NumberCell> startCells, ArrayList<NumberCell> endCells){
-        for (int i = 0; i<startCells.size(); i++){
+    private void showMoveAnimations(ArrayList<NumberCell> startCells, ArrayList<NumberCell> endCells, final ArrayList<Integer> mergedCells){
+        currentStep = 0;
+        final int targetStep = startCells.size();
+        for (int i = 0; i<targetStep; i++){
             float transX = endCells.get(i).getX() - startCells.get(i).getX();
             float transY = endCells.get(i).getY() - startCells.get(i).getY();
 
-            if(i == startCells.size()-1){
-                ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
-                        .duration(250).onStop(new AnimationListener.Stop() {
-                    @Override
-                    public void onStop() {
-                        updateCells();
-                        generateNumber();
-                    }
-                }).start();
+//            if(i == startCells.size()-1){
+//                ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
+//                        .duration(200).onStop(new AnimationListener.Stop() {
+//                    @Override
+//                    public void onStop() {
+//                        updateCells();
+//                        generateNumber();
+//                    }
+//                }).start();
+//            }
+//            else{
+//                ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
+//                        .duration(200).start();
+//            }
+            ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
+                    .duration(200).onStop(new AnimationListener.Stop() {
+                @Override
+                public void onStop() {
+                    currentStep++;
+                    doAfterMove(currentStep, targetStep, mergedCells);
+                }
+            }).start();
+        }
+    }
+
+    private void doAfterMove(int currentStep, int targetStep, ArrayList<Integer> mergedCells){
+        if(currentStep >= targetStep){
+            updateCells();
+            if(mergedCells.size()>0){
+                animateMerge(mergedCells);
             }
             else{
-                ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
-                        .duration(250).start();
+                generateNumber();
             }
-
-
-
-
         }
+    }
+
+    private void animateMerge(ArrayList<Integer> mergedCells){
+        for (Integer i : mergedCells){
+            NumberCell mergedCell = cells.get(i);
+            ViewAnimator.animate(mergedCell).scale(1, (float) 1.3, 1)
+                    .duration(200).start();
+        }
+        generateNumber();
     }
 
     private boolean noBlockHorizontal(int row, int col1, int col2){
@@ -380,7 +419,7 @@ public class NumberGrid extends GridLayout {
 
             board[cell.getRow()][cell.getCol()] = randNum;
 
-            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(50).start();
+            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(200).start();
 
             //Log.d(TAG, "generating a number at : "+cell.getRow()+", "+cell.getCol()+" --- "+randNum);
 
