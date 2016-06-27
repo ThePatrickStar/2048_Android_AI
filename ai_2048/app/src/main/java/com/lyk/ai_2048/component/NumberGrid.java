@@ -99,7 +99,7 @@ public class NumberGrid extends GridLayout {
         }
     }
 
-    public void saveState(){
+    private void saveState(){
         revertScore = score;
         for(int i=0; i<4; i++){
             for(int j=0; j<4; j++){
@@ -210,6 +210,9 @@ public class NumberGrid extends GridLayout {
         if(!canMoveLeft())
             return;
 
+
+        saveState();
+
         for(int i=0; i<4; i++){
             for(int j=1; j<4; j++){
                 if(board[i][j]!=0){
@@ -251,6 +254,9 @@ public class NumberGrid extends GridLayout {
         if(!canMoveRight())
             return;
 
+
+        saveState();
+
         for( int i = 0; i < 4 ; i ++ ){
             for( int j = 2; j >= 0; j -- ){
                 if( board[i][j] != 0 ){
@@ -290,6 +296,9 @@ public class NumberGrid extends GridLayout {
         if(!canMoveUp())
             return;
 
+
+        saveState();
+
         for(int j = 0 ; j < 4 ; j ++ ) {
             for (int i = 1; i < 4; i++) {
                 if (board[i][j] != 0) {
@@ -328,6 +337,9 @@ public class NumberGrid extends GridLayout {
         ArrayList<Integer> mergedCells = new ArrayList<>();
         if(!canMoveDown())
             return;
+
+
+        saveState();
 
         for(int j = 0; j < 4; j++) {
             for (int i = 2; i >= 0; i--) {

@@ -80,22 +80,18 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeTop() {
                 Log.d(TAG, "swiped top");
-                numberGrid.saveState();
                 numberGrid.moveUp();
             }
             public void onSwipeRight() {
                 Log.d(TAG, "swiped right");
-                numberGrid.saveState();
                 numberGrid.moveRight();
             }
             public void onSwipeLeft() {
                 Log.d(TAG, "swiped left");
-                numberGrid.saveState();
                 numberGrid.moveLeft();
             }
             public void onSwipeBottom() {
                 Log.d(TAG, "swiped bottom");
-                numberGrid.saveState();
                 numberGrid.moveDown();
             }
         });
