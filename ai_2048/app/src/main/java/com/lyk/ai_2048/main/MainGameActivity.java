@@ -21,6 +21,7 @@ import com.lyk.ai_2048.component.NumberGrid;
 import com.lyk.ai_2048.component.TouchLayer;
 import com.lyk.ai_2048.util.InfoHolder;
 import com.lyk.ai_2048.util.OnSwipeTouchListener;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -50,6 +51,8 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         setUpInfo();
 
         setUpUIComponents();
+
+        setTextTypeface();
 
 
     }
@@ -183,10 +186,20 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         numberGrid.generateNumber();
     }
 
+    private void setTextTypeface(){
+        TextView tvScoreTag = (TextView) findViewById(R.id.tv_score_tag);
+        TextView tvTitle = (TextView) findViewById(R.id.tv_title);
+
+        tvScoreTag.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
+
+
+    }
+
+
     private void setScoreDisplay(){
         TextView tvScore = (TextView) findViewById(R.id.tv_score);
-        String scoreText = String.format(getResources().getString(R.string.tag_score), score);
-        tvScore.setText(Html.fromHtml(scoreText), TextView.BufferType.SPANNABLE);
+        tvScore.setText(String.valueOf(score));
     }
 
     @Override

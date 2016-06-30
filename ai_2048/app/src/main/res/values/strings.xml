@@ -12,5 +12,6 @@
     <string name="btn_confirm">confirm</string>
     <string name="btn_cancel">cancel</string>
 
-    <string name="tag_score"><![CDATA[ Score : <b><font color=#F44336>%1$d</b> ]]></string>
+    <!--<string name="tag_score"><![CDATA[ Score : <b><font color=#F44336>%1$d</b> ]]></string>-->
+    <string name="tag_score">Score : </string>
 </resources>

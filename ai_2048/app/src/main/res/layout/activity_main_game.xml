@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
         <TextView
-            android:textSize="22sp"
+            android:id="@+id/tv_title"
+            android:textSize="25sp"
             android:layout_centerInParent="true"
             android:textColor="@color/md_red_300"
             android:text="@string/title_player_mode"
@@ -33,13 +34,26 @@
             android:layout_height="@dimen/size_touchable"
             android:background="@drawable/bg_button"
             android:layout_alignParentStart="true"/>
-        <TextView
-            android:id="@+id/tv_score"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/margin_between_contents"
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_score_tag"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_score"
+                android:layout_marginEnd="@dimen/margin_between_contents"/>
+            <TextView
+                android:id="@+id/tv_score"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_red_300"/>
+
+        </LinearLayout>
         <ImageButton
             android:id="@+id/ib_undo"
             android:src="@drawable/ic_undo_white_24dp"

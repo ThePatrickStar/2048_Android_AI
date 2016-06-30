@@ -35,5 +35,8 @@ dependencies {
     //sweet dialog
     compile 'cn.pedant.sweetalert:library:1.3'
 
+    //text typeface
+    compile 'com.vstechlab.easyfonts:easyfonts:1.0.0'
+
 
 }
