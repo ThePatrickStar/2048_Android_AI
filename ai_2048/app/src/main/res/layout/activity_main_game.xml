@@ -6,7 +6,8 @@
     android:paddingBottom="@dimen/margin_whole_screen"
     android:orientation="vertical" 
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
     
     <RelativeLayout
         android:id="@+id/rl_bar"
@@ -17,7 +18,7 @@
             android:id="@+id/tv_title"
             android:textSize="25sp"
             android:layout_centerInParent="true"
-            android:textColor="@color/md_red_300"
+            android:textColor="@color/md_red_200"
             android:text="@string/title_player_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -51,7 +52,7 @@
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/md_red_300"/>
+                android:textColor="@color/md_red_200"/>
 
         </LinearLayout>
         <ImageButton
@@ -61,6 +62,37 @@
             android:layout_height="@dimen/size_touchable"
             android:background="@drawable/bg_button"
             android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <ImageButton
+            android:id="@+id/ib_like"
+            android:layout_width="@dimen/size_touchable"
+            android:layout_height="@dimen/size_touchable"
+            android:background="@drawable/bg_button"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_thumb_up_white_24dp"/>
+
+        <ImageButton
+            android:id="@+id/ib_help"
+            android:layout_width="@dimen/size_touchable"
+            android:layout_height="@dimen/size_touchable"
+            android:background="@drawable/bg_button"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_help_outline_white_24dp"/>
+
+        <ImageButton
+            android:id="@+id/ib_ai"
+            android:layout_width="@dimen/size_touchable"
+            android:layout_height="@dimen/size_touchable"
+            android:background="@drawable/bg_button"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
     </RelativeLayout>
 
 

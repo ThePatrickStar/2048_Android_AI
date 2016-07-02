@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lyk.ai_2048.R;
+import com.lyk.ai_2048.ai.AI;
 import com.lyk.ai_2048.base.GameHolder;
 import com.lyk.ai_2048.component.Grid;
 import com.lyk.ai_2048.component.NumberGrid;
@@ -37,6 +38,10 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
     private int score = 0;
 
     private SweetAlertDialog sDialog;
+
+    private ImageButton ibAI;
+
+    private AI ai;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,15 +117,21 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         numberGrid.generateNumber();
         numberGrid.generateNumber();
 
-        ImageButton ibRefresh = (ImageButton) findViewById(R.id.ib_refresh);
-        RelativeLayout.LayoutParams ibRLayoutParams = (RelativeLayout.LayoutParams) ibRefresh.getLayoutParams();
+        ai = new AI(numberGrid);
+
+
+
         int deviceSize;
         if(InfoHolder.getDeviceX() > InfoHolder.getDeviceY())
             deviceSize = InfoHolder.getDeviceY();
         else
             deviceSize = InfoHolder.getDeviceX();
+        int sideBtnMargin = (deviceSize - InfoHolder.getGridSize())/2;
 
-        ibRLayoutParams.setMarginStart((deviceSize - InfoHolder.getGridSize())/2);
+        ImageButton ibRefresh = (ImageButton) findViewById(R.id.ib_refresh);
+        RelativeLayout.LayoutParams ibRLayoutParams = (RelativeLayout.LayoutParams) ibRefresh.getLayoutParams();
+
+        ibRLayoutParams.setMarginStart(sideBtnMargin);
         ibRefresh.setLayoutParams(ibRLayoutParams);
 
         ibRefresh.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +174,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         ImageButton ibUndo = (ImageButton) findViewById(R.id.ib_undo);
         RelativeLayout.LayoutParams ibULayoutParams = (RelativeLayout.LayoutParams) ibUndo.getLayoutParams();
 
-        ibULayoutParams.setMarginEnd((deviceSize - InfoHolder.getGridSize())/2);
+        ibULayoutParams.setMarginEnd(sideBtnMargin);
 
         ibUndo.setLayoutParams(ibULayoutParams);
 
@@ -174,11 +185,56 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             }
         });
 
+        ImageButton ibLike = (ImageButton) findViewById(R.id.ib_like);
+        RelativeLayout.LayoutParams ibLLayoutParams = (RelativeLayout.LayoutParams) ibLike.getLayoutParams();
+
+        ibLLayoutParams.setMarginStart(sideBtnMargin);
+
+        ibLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        ibAI = (ImageButton) findViewById(R.id.ib_ai);
+        RelativeLayout.LayoutParams ibAILayoutParams = (RelativeLayout.LayoutParams) ibAI.getLayoutParams();
+
+        ibAILayoutParams.setMarginEnd(sideBtnMargin);
+
+        ibAI.setLayoutParams(ibAILayoutParams);
+
+        ibAI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!numberGrid.getAiMode()){
+                    ibAI.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
+                    numberGrid.setAiMode(true);
+                    ai.getBestMove();
+                }
+                else{
+                    ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+                    numberGrid.setAiMode(false);
+                }
+            }
+        });
+
+        ImageButton ibHelp = (ImageButton) findViewById(R.id.ib_help);
+
+        ibHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
     }
 
     @Override
     public void resetGame(){
+        ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+        numberGrid.setAiMode(false);
         score = 0;
         setScoreDisplay();
         numberGrid.init();

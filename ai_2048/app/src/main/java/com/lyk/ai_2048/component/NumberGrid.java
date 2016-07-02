@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
 import com.lyk.ai_2048.R;
+import com.lyk.ai_2048.ai.AI;
 import com.lyk.ai_2048.base.GameHolder;
 import com.lyk.ai_2048.util.InfoHolder;
 
@@ -38,7 +39,9 @@ public class NumberGrid extends GridLayout {
 
     private SweetAlertDialog sDialog;
 
-    private boolean revertible;
+    private boolean revertible, aiMode = false;
+
+    private AI ai;
 
 
     public NumberGrid(Context context) {
@@ -155,7 +158,7 @@ public class NumberGrid extends GridLayout {
 
     }
 
-    private boolean canMoveLeft(){
+    public boolean canMoveLeft(){
         for (int i=0; i<4; i++){
             for (int j=1; j<4; j++){
                 if(board[i][j]!=0){
@@ -167,7 +170,7 @@ public class NumberGrid extends GridLayout {
         return false;
     }
 
-    private boolean canMoveRight(){
+    public boolean canMoveRight(){
         for (int i=0; i<4; i++){
             for (int j=0; j<3; j++){
                 if(board[i][j]!=0){
@@ -179,7 +182,7 @@ public class NumberGrid extends GridLayout {
         return false;
     }
 
-    private boolean canMoveUp(){
+    public boolean canMoveUp(){
         for (int i=1; i<4; i++){
             for (int j=0; j<4; j++){
                 if(board[i][j]!=0){
@@ -191,7 +194,7 @@ public class NumberGrid extends GridLayout {
         return false;
     }
 
-    private boolean canMoveDown(){
+    public boolean canMoveDown(){
         for (int i=0; i<3; i++){
             for (int j=0; j<4; j++){
                 if(board[i][j]!=0){
@@ -202,6 +205,138 @@ public class NumberGrid extends GridLayout {
         }
         return false;
     }
+
+    public int[][] fakeMoveLeft(){
+        int[][] effectiveBoard = new int[4][4];
+        boolean[][] effectiveHasConflicted = new boolean[4][4];
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                effectiveBoard[i][j] = board[i][j];
+                effectiveHasConflicted[i][j] = hasConflicted[i][j];
+            }
+        }
+
+        for(int i=0; i<4; i++){
+            for(int j=1; j<4; j++){
+                if(effectiveBoard[i][j]!=0){
+                    for(int k=0; k<j; k++){
+                        if(effectiveBoard[i][k] == 0 && noBlockHorizontal(i, k, j)){
+                            effectiveBoard[i][k]=effectiveBoard[i][j];
+                            effectiveBoard[i][j]=0;
+                            break;
+                        }
+                        else if (effectiveBoard[i][k] == effectiveBoard[i][j] && noBlockHorizontal(i, k, j) && !effectiveHasConflicted[i][k]){
+                            effectiveBoard[i][k]+=effectiveBoard[i][j];
+                            effectiveBoard[i][j]=0;
+                            effectiveHasConflicted[i][k] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return effectiveBoard;
+    }
+
+    public int[][] fakeMoveRight(){
+        int[][] effectiveBoard = new int[4][4];
+        boolean[][] effectiveHasConflicted = new boolean[4][4];
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                effectiveBoard[i][j] = board[i][j];
+                effectiveHasConflicted[i][j] = hasConflicted[i][j];
+            }
+        }
+
+        for( int i = 0; i < 4 ; i ++ ){
+            for( int j = 2; j >= 0; j -- ){
+                if( effectiveBoard[i][j] != 0 ){
+                    for(int k = 3; k > j; k--){
+                        if( effectiveBoard[i][k] == 0 && noBlockHorizontal(i, j, k) ){
+                            effectiveBoard[i][k] = effectiveBoard[i][j];
+                            effectiveBoard[i][j] = 0;
+                            break;
+                        }
+                        else if( effectiveBoard[i][k] == effectiveBoard[i][j] && noBlockHorizontal(i, j, k) && !effectiveHasConflicted[i][k] ){
+                            effectiveBoard[i][k] *= 2;
+                            effectiveBoard[i][j] = 0;
+                            effectiveHasConflicted[i][k] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return effectiveBoard;
+    }
+
+    public int[][] fakeMoveUp(){
+        int[][] effectiveBoard = new int[4][4];
+        boolean[][] effectiveHasConflicted = new boolean[4][4];
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                effectiveBoard[i][j] = board[i][j];
+                effectiveHasConflicted[i][j] = hasConflicted[i][j];
+            }
+        }
+
+        for(int j = 0 ; j < 4 ; j ++ ) {
+            for (int i = 1; i < 4; i++) {
+                if (effectiveBoard[i][j] != 0) {
+                    for (int k = 0; k < i; k++) {
+                        if (effectiveBoard[k][j] == 0 && noBlockVertical(j, k, i)) {
+                            effectiveBoard[k][j] = effectiveBoard[i][j];
+                            effectiveBoard[i][j] = 0;
+                            break;
+                        } else if (effectiveBoard[k][j] == effectiveBoard[i][j] && noBlockVertical(j, k, i) && !effectiveHasConflicted[k][j]) {
+                            effectiveBoard[k][j] *= 2;
+                            effectiveBoard[i][j] = 0;
+                            effectiveHasConflicted[k][j] = true;
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return effectiveBoard;
+    }
+
+    public int[][] fakeMoveDown(){
+                int[][] effectiveBoard = new int[4][4];
+        boolean[][] effectiveHasConflicted = new boolean[4][4];
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                effectiveBoard[i][j] = board[i][j];
+                effectiveHasConflicted[i][j] = hasConflicted[i][j];
+            }
+        }
+
+        for(int j = 0; j < 4; j++) {
+            for (int i = 2; i >= 0; i--) {
+                if (effectiveBoard[i][j] != 0) {
+                    for (int k = 3; k > i; k--) {
+                        if (effectiveBoard[k][j] == 0 && noBlockVertical(j, i, k)) {
+                            effectiveBoard[k][j] = effectiveBoard[i][j];
+                            effectiveBoard[i][j] = 0;
+                            break;
+                        } else if (effectiveBoard[k][j] == effectiveBoard[i][j] && noBlockVertical(j, i, k) && !effectiveHasConflicted[k][j]) {
+                            effectiveBoard[k][j] *= 2;
+                            effectiveBoard[i][j] = 0;
+                            effectiveHasConflicted[k][j] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return effectiveBoard;
+    }
+
 
     public void moveLeft(){
         ArrayList<NumberCell> startCells = new ArrayList<>();
@@ -487,6 +622,7 @@ public class NumberGrid extends GridLayout {
             ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(200).onStop(new AnimationListener.Stop() {
                 @Override
                 public void onStop() {
+                    Log.d("Artificial", "after generating number");
                     if(isGameOver()){
                         sDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
 
@@ -513,6 +649,9 @@ public class NumberGrid extends GridLayout {
 
                         sDialog.show();
                     }
+                    else if(aiMode){
+                        ai.getBestMove();
+                    }
                 }
             }).start();
 
@@ -523,5 +662,17 @@ public class NumberGrid extends GridLayout {
 
     public void setGameHolder(GameHolder gameHolder) {
         this.gameHolder = gameHolder;
+    }
+
+    public void setAi(AI ai){
+        this.ai = ai;
+    }
+
+    public boolean getAiMode(){
+        return this.aiMode;
+    }
+
+    public void setAiMode(boolean aiMode){
+        this.aiMode = aiMode;
     }
 }
