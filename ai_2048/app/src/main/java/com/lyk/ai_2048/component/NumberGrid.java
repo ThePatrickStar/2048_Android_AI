@@ -10,8 +10,10 @@ import android.widget.RelativeLayout;
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
 import com.lyk.ai_2048.R;
-import com.lyk.ai_2048.ai.AI;
+import com.lyk.ai_2048.ai.MonteCarloAI;
 import com.lyk.ai_2048.base.GameHolder;
+import com.lyk.ai_2048.util.BoardUtil;
+import com.lyk.ai_2048.util.Config;
 import com.lyk.ai_2048.util.InfoHolder;
 
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public class NumberGrid extends GridLayout {
 
     private boolean revertible, aiMode = false;
 
-    private AI ai;
+    private MonteCarloAI mcAI;
 
 
     public NumberGrid(Context context) {
@@ -158,191 +160,11 @@ public class NumberGrid extends GridLayout {
 
     }
 
-    public boolean canMoveLeft(){
-        for (int i=0; i<4; i++){
-            for (int j=1; j<4; j++){
-                if(board[i][j]!=0){
-                    if (board[i][j-1]==0 || board[i][j] == board[i][j-1])
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean canMoveRight(){
-        for (int i=0; i<4; i++){
-            for (int j=0; j<3; j++){
-                if(board[i][j]!=0){
-                    if (board[i][j+1]==0 || board[i][j] == board[i][j+1])
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean canMoveUp(){
-        for (int i=1; i<4; i++){
-            for (int j=0; j<4; j++){
-                if(board[i][j]!=0){
-                    if (board[i-1][j]==0 || board[i][j] == board[i-1][j])
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean canMoveDown(){
-        for (int i=0; i<3; i++){
-            for (int j=0; j<4; j++){
-                if(board[i][j]!=0){
-                    if (board[i+1][j]==0 || board[i][j] == board[i+1][j])
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public int[][] fakeMoveLeft(){
-        int[][] effectiveBoard = new int[4][4];
-        boolean[][] effectiveHasConflicted = new boolean[4][4];
-        for(int i=0; i<4; i++){
-            for(int j=0; j<4; j++){
-                effectiveBoard[i][j] = board[i][j];
-                effectiveHasConflicted[i][j] = hasConflicted[i][j];
-            }
-        }
-
-        for(int i=0; i<4; i++){
-            for(int j=1; j<4; j++){
-                if(effectiveBoard[i][j]!=0){
-                    for(int k=0; k<j; k++){
-                        if(effectiveBoard[i][k] == 0 && noBlockHorizontal(i, k, j)){
-                            effectiveBoard[i][k]=effectiveBoard[i][j];
-                            effectiveBoard[i][j]=0;
-                            break;
-                        }
-                        else if (effectiveBoard[i][k] == effectiveBoard[i][j] && noBlockHorizontal(i, k, j) && !effectiveHasConflicted[i][k]){
-                            effectiveBoard[i][k]+=effectiveBoard[i][j];
-                            effectiveBoard[i][j]=0;
-                            effectiveHasConflicted[i][k] = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return effectiveBoard;
-    }
-
-    public int[][] fakeMoveRight(){
-        int[][] effectiveBoard = new int[4][4];
-        boolean[][] effectiveHasConflicted = new boolean[4][4];
-        for(int i=0; i<4; i++){
-            for(int j=0; j<4; j++){
-                effectiveBoard[i][j] = board[i][j];
-                effectiveHasConflicted[i][j] = hasConflicted[i][j];
-            }
-        }
-
-        for( int i = 0; i < 4 ; i ++ ){
-            for( int j = 2; j >= 0; j -- ){
-                if( effectiveBoard[i][j] != 0 ){
-                    for(int k = 3; k > j; k--){
-                        if( effectiveBoard[i][k] == 0 && noBlockHorizontal(i, j, k) ){
-                            effectiveBoard[i][k] = effectiveBoard[i][j];
-                            effectiveBoard[i][j] = 0;
-                            break;
-                        }
-                        else if( effectiveBoard[i][k] == effectiveBoard[i][j] && noBlockHorizontal(i, j, k) && !effectiveHasConflicted[i][k] ){
-                            effectiveBoard[i][k] *= 2;
-                            effectiveBoard[i][j] = 0;
-                            effectiveHasConflicted[i][k] = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return effectiveBoard;
-    }
-
-    public int[][] fakeMoveUp(){
-        int[][] effectiveBoard = new int[4][4];
-        boolean[][] effectiveHasConflicted = new boolean[4][4];
-        for(int i=0; i<4; i++){
-            for(int j=0; j<4; j++){
-                effectiveBoard[i][j] = board[i][j];
-                effectiveHasConflicted[i][j] = hasConflicted[i][j];
-            }
-        }
-
-        for(int j = 0 ; j < 4 ; j ++ ) {
-            for (int i = 1; i < 4; i++) {
-                if (effectiveBoard[i][j] != 0) {
-                    for (int k = 0; k < i; k++) {
-                        if (effectiveBoard[k][j] == 0 && noBlockVertical(j, k, i)) {
-                            effectiveBoard[k][j] = effectiveBoard[i][j];
-                            effectiveBoard[i][j] = 0;
-                            break;
-                        } else if (effectiveBoard[k][j] == effectiveBoard[i][j] && noBlockVertical(j, k, i) && !effectiveHasConflicted[k][j]) {
-                            effectiveBoard[k][j] *= 2;
-                            effectiveBoard[i][j] = 0;
-                            effectiveHasConflicted[k][j] = true;
-                            break;
-                        }
-                    }
-
-                }
-            }
-        }
-
-        return effectiveBoard;
-    }
-
-    public int[][] fakeMoveDown(){
-                int[][] effectiveBoard = new int[4][4];
-        boolean[][] effectiveHasConflicted = new boolean[4][4];
-        for(int i=0; i<4; i++){
-            for(int j=0; j<4; j++){
-                effectiveBoard[i][j] = board[i][j];
-                effectiveHasConflicted[i][j] = hasConflicted[i][j];
-            }
-        }
-
-        for(int j = 0; j < 4; j++) {
-            for (int i = 2; i >= 0; i--) {
-                if (effectiveBoard[i][j] != 0) {
-                    for (int k = 3; k > i; k--) {
-                        if (effectiveBoard[k][j] == 0 && noBlockVertical(j, i, k)) {
-                            effectiveBoard[k][j] = effectiveBoard[i][j];
-                            effectiveBoard[i][j] = 0;
-                            break;
-                        } else if (effectiveBoard[k][j] == effectiveBoard[i][j] && noBlockVertical(j, i, k) && !effectiveHasConflicted[k][j]) {
-                            effectiveBoard[k][j] *= 2;
-                            effectiveBoard[i][j] = 0;
-                            effectiveHasConflicted[k][j] = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return effectiveBoard;
-    }
-
-
     public void moveLeft(){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
         ArrayList<Integer> mergedCells = new ArrayList<>();
-        if(!canMoveLeft())
+        if(!BoardUtil.canMoveLeft(this.board))
             return;
 
 
@@ -352,7 +174,7 @@ public class NumberGrid extends GridLayout {
             for(int j=1; j<4; j++){
                 if(board[i][j]!=0){
                     for(int k=0; k<j; k++){
-                        if(board[i][k] == 0 && noBlockHorizontal(i, k, j)){
+                        if(board[i][k] == 0 && BoardUtil.noBlockHorizontal(this.board, i, k, j)){
                             //Log.d(TAG, "moving left ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
@@ -361,7 +183,7 @@ public class NumberGrid extends GridLayout {
                             board[i][j]=0;
                             break;
                         }
-                        else if (board[i][k] == board[i][j] && noBlockHorizontal(i, k, j) && !hasConflicted[i][k]){
+                        else if (board[i][k] == board[i][j] && BoardUtil.noBlockHorizontal(this.board, i, k, j) && !hasConflicted[i][k]){
                             //Log.d(TAG, "merging left ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
@@ -386,7 +208,7 @@ public class NumberGrid extends GridLayout {
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
         ArrayList<Integer> mergedCells = new ArrayList<>();
-        if(!canMoveRight())
+        if(!BoardUtil.canMoveRight(this.board))
             return;
 
 
@@ -396,7 +218,7 @@ public class NumberGrid extends GridLayout {
             for( int j = 2; j >= 0; j -- ){
                 if( board[i][j] != 0 ){
                     for(int k = 3; k > j; k--){
-                        if( board[i][k] == 0 && noBlockHorizontal(i, j, k) ){
+                        if( board[i][k] == 0 && BoardUtil.noBlockHorizontal(this.board, i, j, k) ){
                             //Log.d(TAG, "moving right ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
@@ -404,7 +226,7 @@ public class NumberGrid extends GridLayout {
                             board[i][j] = 0;
                             break;
                         }
-                        else if( board[i][k] == board[i][j] && noBlockHorizontal(i, j, k) && !hasConflicted[i][k] ){
+                        else if( board[i][k] == board[i][j] && BoardUtil.noBlockHorizontal(this.board, i, j, k) && !hasConflicted[i][k] ){
                             //Log.d(TAG, "merging right ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*i+k));
@@ -428,7 +250,7 @@ public class NumberGrid extends GridLayout {
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
         ArrayList<Integer> mergedCells = new ArrayList<>();
-        if(!canMoveUp())
+        if(!BoardUtil.canMoveUp(this.board))
             return;
 
 
@@ -438,14 +260,14 @@ public class NumberGrid extends GridLayout {
             for (int i = 1; i < 4; i++) {
                 if (board[i][j] != 0) {
                     for (int k = 0; k < i; k++) {
-                        if (board[k][j] == 0 && noBlockVertical(j, k, i)) {
+                        if (board[k][j] == 0 && BoardUtil.noBlockVertical(this.board, j, k, i)) {
                             //Log.d(TAG, "moving up ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
                             board[k][j] = board[i][j];
                             board[i][j] = 0;
                             break;
-                        } else if (board[k][j] == board[i][j] && noBlockVertical(j, k, i) && !hasConflicted[k][j]) {
+                        } else if (board[k][j] == board[i][j] && BoardUtil.noBlockVertical(this.board, j, k, i) && !hasConflicted[k][j]) {
                             //Log.d(TAG, "merging up ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
@@ -470,7 +292,7 @@ public class NumberGrid extends GridLayout {
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
         ArrayList<Integer> mergedCells = new ArrayList<>();
-        if(!canMoveDown())
+        if(!BoardUtil.canMoveDown(this.board))
             return;
 
 
@@ -480,14 +302,14 @@ public class NumberGrid extends GridLayout {
             for (int i = 2; i >= 0; i--) {
                 if (board[i][j] != 0) {
                     for (int k = 3; k > i; k--) {
-                        if (board[k][j] == 0 && noBlockVertical(j, i, k)) {
+                        if (board[k][j] == 0 && BoardUtil.noBlockVertical(this.board, j, i, k)) {
                             //Log.d(TAG, "moving down ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
                             board[k][j] = board[i][j];
                             board[i][j] = 0;
                             break;
-                        } else if (board[k][j] == board[i][j] && noBlockVertical(j, i, k) && !hasConflicted[k][j]) {
+                        } else if (board[k][j] == board[i][j] && BoardUtil.noBlockVertical(this.board, j, i, k) && !hasConflicted[k][j]) {
                             //Log.d(TAG, "merging down ...");
                             startCells.add(cells.get(4*i+j));
                             endCells.add(cells.get(4*k+j));
@@ -514,25 +336,13 @@ public class NumberGrid extends GridLayout {
             float transX = endCells.get(i).getX() - startCells.get(i).getX();
             float transY = endCells.get(i).getY() - startCells.get(i).getY();
 
-//            if(i == startCells.size()-1){
-//                ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
-//                        .duration(200).onStop(new AnimationListener.Stop() {
-//                    @Override
-//                    public void onStop() {
-//                        updateCells();
-//                        generateNumber();
-//                    }
-//                }).start();
-//            }
-//            else{
-//                ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
-//                        .duration(200).start();
-//            }
             ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
-                    .duration(200).onStop(new AnimationListener.Stop() {
+                    .duration(Config.MOVE_DURATION).onStop(new AnimationListener.Stop() {
                 @Override
                 public void onStop() {
-                    currentStep++;
+                    synchronized (this) {
+                        currentStep++;
+                    }
                     doAfterMove(currentStep, targetStep, mergedCells);
                 }
             }).start();
@@ -553,46 +363,27 @@ public class NumberGrid extends GridLayout {
     }
 
     private void animateMerge(ArrayList<Integer> mergedCells){
+        currentStep = 0;
+        final int targetStep = mergedCells.size();
         for (Integer i : mergedCells){
             NumberCell mergedCell = cells.get(i);
             ViewAnimator.animate(mergedCell).scale(1, (float) 1.3, 1)
-                    .duration(200).start();
+                    .duration(Config.MERGE_DURATION).onStop(new AnimationListener.Stop() {
+                @Override
+                public void onStop() {
+                    synchronized (this) {
+                        currentStep++;
+                    }
+                    doAfterMerge(currentStep, targetStep);
+                }
+            }).start();
         }
-        generateNumber();
     }
 
-    private boolean noBlockHorizontal(int row, int col1, int col2){
-        for (int i = col1+1; i< col2; i++){
-            if (board[row][i]!=0)
-                return false;
+    private void doAfterMerge(int currentStep, int targetStep){
+        if(currentStep >= targetStep){
+            generateNumber();
         }
-        return true;
-    }
-
-    private boolean noBlockVertical(int col, int row1, int row2){
-        for (int i=row1+1;i<row2; i++){
-            if (board[i][col]!=0)
-                return false;
-        }
-        return true;
-    }
-
-    private boolean noSpace(){
-        for (int i=0; i<4; i++){
-            for (int j=0; j<4; j++){
-                if(board[i][j] == 0)
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean noMove(){
-        return !(canMoveDown() || canMoveLeft() || canMoveRight() || canMoveUp());
-    }
-
-    private boolean isGameOver(){
-        return noSpace() && noMove();
     }
 
     public void generateNumber(){
@@ -604,7 +395,6 @@ public class NumberGrid extends GridLayout {
         }
         if (emptyCells.size()==0){
             Log.d(TAG, "no more available cells");
-            return;
         }
         else{
 
@@ -619,11 +409,11 @@ public class NumberGrid extends GridLayout {
 
             board[cell.getRow()][cell.getCol()] = randNum;
 
-            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(200).onStop(new AnimationListener.Stop() {
+            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(Config.GENERATE_DURATION).onStop(new AnimationListener.Stop() {
                 @Override
                 public void onStop() {
-                    Log.d("Artificial", "after generating number");
-                    if(isGameOver()){
+
+                    if(BoardUtil.isGameOver(board)){
                         sDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
 
                         sDialog.showCancelButton(false);
@@ -650,7 +440,7 @@ public class NumberGrid extends GridLayout {
                         sDialog.show();
                     }
                     else if(aiMode){
-                        ai.getBestMove();
+                        mcAI.getBestMove();
                     }
                 }
             }).start();
@@ -660,12 +450,29 @@ public class NumberGrid extends GridLayout {
         }
     }
 
+    public LogicNumberGrid getLogicBoard(){
+        LogicNumberGrid logicBoard = new LogicNumberGrid();
+        logicBoard.setScore(this.score);
+        int[][] tempBoard = new int[4][4];
+        boolean[][] tempHasConflicted = new boolean[4][4];
+
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                tempBoard[i][j] = board[i][j];
+                tempHasConflicted[i][j] = hasConflicted[i][j];
+            }
+        }
+        logicBoard.setBoard(tempBoard);
+        logicBoard.setHasConflicted(tempHasConflicted);
+        return logicBoard;
+    }
+
     public void setGameHolder(GameHolder gameHolder) {
         this.gameHolder = gameHolder;
     }
 
-    public void setAi(AI ai){
-        this.ai = ai;
+    public void setMcAI(MonteCarloAI mcAI){
+        this.mcAI = mcAI;
     }
 
     public boolean getAiMode(){
@@ -675,4 +482,5 @@ public class NumberGrid extends GridLayout {
     public void setAiMode(boolean aiMode){
         this.aiMode = aiMode;
     }
+
 }

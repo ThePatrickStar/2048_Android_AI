@@ -3,11 +3,9 @@ package com.lyk.ai_2048.main;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -15,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lyk.ai_2048.R;
-import com.lyk.ai_2048.ai.AI;
+import com.lyk.ai_2048.ai.MonteCarloAI;
 import com.lyk.ai_2048.base.GameHolder;
 import com.lyk.ai_2048.component.Grid;
 import com.lyk.ai_2048.component.NumberGrid;
@@ -41,7 +39,9 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private ImageButton ibAI;
 
-    private AI ai;
+    private MonteCarloAI mcAI;
+
+    private TouchLayer touchLayer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         grid = new Grid(this);
         numberGrid = new NumberGrid(this);
         numberGrid.setGameHolder(this);
-        TouchLayer touchLayer = new TouchLayer(this);
+        touchLayer = new TouchLayer(this);
         touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeTop() {
                 Log.d(TAG, "swiped top");
@@ -117,7 +117,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         numberGrid.generateNumber();
         numberGrid.generateNumber();
 
-        ai = new AI(numberGrid);
+        mcAI = new MonteCarloAI(numberGrid);
 
 
 
@@ -208,11 +208,13 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             @Override
             public void onClick(View v) {
                 if(!numberGrid.getAiMode()){
+                    touchLayer.setVisibility(View.GONE);
                     ibAI.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
                     numberGrid.setAiMode(true);
-                    ai.getBestMove();
+                    mcAI.getBestMove();
                 }
                 else{
+                    touchLayer.setVisibility(View.VISIBLE);
                     ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
                     numberGrid.setAiMode(false);
                 }
@@ -233,6 +235,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     @Override
     public void resetGame(){
+        touchLayer.setVisibility(View.VISIBLE);
         ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
         numberGrid.setAiMode(false);
         score = 0;
