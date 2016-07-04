@@ -20,7 +20,7 @@ public class NumberCell extends TextView {
         this.setGravity(Gravity.CENTER);
         this.setTextColor(ContextCompat.getColor(context, R.color.md_white_1000));
 
-        this.setTypeface(null, Typeface.BOLD);
+        //this.setTypeface(null, Typeface.BOLD);
     }
 
     private int getCellBg(int number){
@@ -72,10 +72,10 @@ public class NumberCell extends TextView {
                 if(number <= 4){
                     this.setTextColor(ContextCompat.getColor(getContext(),R.color.color_special_number));
                 }
-                this.setTextSize(30);
+                this.setTextSize(25);
             }
             else if (number < 10000){
-                this.setTextSize(25);
+                this.setTextSize(20);
             }
             else{
                 this.setTextSize(15);

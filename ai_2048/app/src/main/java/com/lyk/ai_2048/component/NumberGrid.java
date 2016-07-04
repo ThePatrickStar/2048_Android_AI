@@ -342,8 +342,9 @@ public class NumberGrid extends GridLayout {
                 public void onStop() {
                     synchronized (this) {
                         currentStep++;
+                        doAfterMove(currentStep, targetStep, mergedCells);
                     }
-                    doAfterMove(currentStep, targetStep, mergedCells);
+
                 }
             }).start();
         }
@@ -367,14 +368,15 @@ public class NumberGrid extends GridLayout {
         final int targetStep = mergedCells.size();
         for (Integer i : mergedCells){
             NumberCell mergedCell = cells.get(i);
-            ViewAnimator.animate(mergedCell).scale(1, (float) 1.3, 1)
+            ViewAnimator.animate(mergedCell).scale(1.f, (float) 1.3, 1.f)
                     .duration(Config.MERGE_DURATION).onStop(new AnimationListener.Stop() {
                 @Override
                 public void onStop() {
                     synchronized (this) {
                         currentStep++;
+                        doAfterMerge(currentStep, targetStep);
                     }
-                    doAfterMerge(currentStep, targetStep);
+
                 }
             }).start();
         }
