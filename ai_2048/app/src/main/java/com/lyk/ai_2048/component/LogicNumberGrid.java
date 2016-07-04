@@ -14,7 +14,7 @@ public class LogicNumberGrid {
     private static final String TAG = "LogicNumberGrid";
     private int[][] board, fakeBoard;
     private boolean[][] hasConflicted, fakeHasConflicted;
-    private int score, fakeScore;
+    private int score, fakeScore, fakeMoves;
 
 
     public void fakeMoveLeft(){
@@ -41,6 +41,7 @@ public class LogicNumberGrid {
                 }
             }
         }
+        fakeMoves++;
         fakeUpdateCells();
         fakeGenerateNumber();
     }
@@ -70,6 +71,7 @@ public class LogicNumberGrid {
                 }
             }
         }
+        fakeMoves++;
         fakeUpdateCells();
         fakeGenerateNumber();
     }
@@ -99,6 +101,7 @@ public class LogicNumberGrid {
                 }
             }
         }
+        fakeMoves++;
         fakeUpdateCells();
         fakeGenerateNumber();
     }
@@ -127,13 +130,14 @@ public class LogicNumberGrid {
                 }
             }
         }
-
+        fakeMoves++;
         fakeUpdateCells();
         fakeGenerateNumber();
     }
 
-    public int fakeRunTillOver(int move){
-
+    public int[] fakeRunTillOver(int move){
+        int[] pair = new int[2];
+        fakeMoves = 0;
         fakeScore = score;
         fakeBoard = new int[4][4];
         fakeHasConflicted = new boolean[4][4];
@@ -146,28 +150,42 @@ public class LogicNumberGrid {
 
         switch(move){
             case 0:
-                if(!BoardUtil.canMoveUp(fakeBoard))
-                    return -1;
+                if(!BoardUtil.canMoveUp(fakeBoard)) {
+                    pair[0] = -1;
+                    pair[1] = 0;
+                    return pair;
+                }
                 fakeMoveUp();
                 break;
             case 1:
-                if(!BoardUtil.canMoveDown(fakeBoard))
-                    return -1;
+                if(!BoardUtil.canMoveDown(fakeBoard)){
+                    pair[0] = -1;
+                    pair[1] = 0;
+                    return pair;
+                }
                 fakeMoveDown();
                 break;
             case 2:
-                if(!BoardUtil.canMoveLeft(fakeBoard))
-                    return -1;
+                if(!BoardUtil.canMoveLeft(fakeBoard)){
+                    pair[0] = -1;
+                    pair[1] = 0;
+                    return pair;
+                }
                 fakeMoveLeft();
                 break;
             case 3:
-                if(!BoardUtil.canMoveRight(fakeBoard))
-                    return -1;
+                if(!BoardUtil.canMoveRight(fakeBoard)){
+                    pair[0] = -1;
+                    pair[1] = 0;
+                    return pair;
+                }
                 fakeMoveRight();
                 break;
             default:
                 Log.d(TAG, "invalid move");
-                return -1;
+                pair[0] = -1;
+                pair[1] = 0;
+                return pair;
         }
 
         while(!BoardUtil.isGameOver(fakeBoard)){
@@ -187,7 +205,9 @@ public class LogicNumberGrid {
             }
         }
 
-        return fakeScore;
+        pair[0] = fakeScore;
+        pair[1] = fakeMoves;
+        return pair;
     }
 
 

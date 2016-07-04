@@ -63,14 +63,26 @@ public class MonteCarloAI {
     private void performMove(){
         if(currentStep >= TARGET_STEP){
             currentStep = 0;
-            float bestScore = 0.f;
+            float bestScore = 0.f, totalMoves = 0.f;
             int bestMove = -1;
             for(int i=0; i<4; i++){
-                if(runs[i].getScore() >= bestScore){
-                    bestScore = runs[i].getScore();
-                    bestMove = runs[i].getMove();
+                totalMoves += runs[i].getMoves();
+//                if(runs[i].getScore() >= bestScore){
+//                    bestScore = runs[i].getScore();
+//                    bestMove = runs[i].getMove();
+//                }
+            }
+
+            for(int j=0; j<4; j++){
+                if(runs[j].getMoves()>0){
+                    float ucb1Score = (float) (runs[j].getScore() + Math.sqrt((2*Math.log(totalMoves))/runs[j].getMoves()) );
+                    if(ucb1Score >= bestScore){
+                        bestScore = ucb1Score;
+                        bestMove = runs[j].getMove();
+                    }
                 }
             }
+
             Log.d(TAG, "random best score: "+bestScore);
             switch (bestMove) {
                 case 0:
@@ -95,7 +107,7 @@ public class MonteCarloAI {
     private class RandomRun extends AsyncTask<Void, Void, Void> {
 
         private int move;
-        private float score;
+        private float score, moves;
         private LogicNumberGrid tempNumberGrid;
 
         public RandomRun(int move){
@@ -111,13 +123,20 @@ public class MonteCarloAI {
             return score;
         }
 
+        public float getMoves() {
+            return moves;
+        }
+
         @Override
         protected Void doInBackground(Void... params) {
             score = 0;
             for(int i = 0; i<GAMES_PER_MOVE; i++){
-                score += tempNumberGrid.fakeRunTillOver(move);
+                int[] pair = tempNumberGrid.fakeRunTillOver(move);
+                score += pair[0];
+                moves += pair[1];
             }
             score/= GAMES_PER_MOVE;
+            moves/= GAMES_PER_MOVE;
 
             synchronized (this){
                 currentStep++;
