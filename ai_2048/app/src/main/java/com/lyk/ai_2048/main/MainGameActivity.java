@@ -12,12 +12,15 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.florent37.viewanimator.AnimationListener;
+import com.github.florent37.viewanimator.ViewAnimator;
 import com.lyk.ai_2048.R;
 import com.lyk.ai_2048.ai.MonteCarloAI;
 import com.lyk.ai_2048.base.GameHolder;
 import com.lyk.ai_2048.component.Grid;
 import com.lyk.ai_2048.component.NumberGrid;
 import com.lyk.ai_2048.component.TouchLayer;
+import com.lyk.ai_2048.util.Config;
 import com.lyk.ai_2048.util.InfoHolder;
 import com.lyk.ai_2048.util.OnSwipeTouchListener;
 import com.vstechlab.easyfonts.EasyFonts;
@@ -37,11 +40,13 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private SweetAlertDialog sDialog;
 
-    private ImageButton ibAI;
+    private ImageButton ibAI, ibRefresh, ibUndo, ibLike, ibHelp;
 
     private MonteCarloAI mcAI;
 
     private TouchLayer touchLayer;
+
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,7 +133,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             deviceSize = InfoHolder.getDeviceX();
         int sideBtnMargin = (deviceSize - InfoHolder.getGridSize())/2;
 
-        ImageButton ibRefresh = (ImageButton) findViewById(R.id.ib_refresh);
+        ibRefresh = (ImageButton) findViewById(R.id.ib_refresh);
         RelativeLayout.LayoutParams ibRLayoutParams = (RelativeLayout.LayoutParams) ibRefresh.getLayoutParams();
 
         ibRLayoutParams.setMarginStart(sideBtnMargin);
@@ -171,7 +176,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             }
         });
 
-        ImageButton ibUndo = (ImageButton) findViewById(R.id.ib_undo);
+        ibUndo = (ImageButton) findViewById(R.id.ib_undo);
         RelativeLayout.LayoutParams ibULayoutParams = (RelativeLayout.LayoutParams) ibUndo.getLayoutParams();
 
         ibULayoutParams.setMarginEnd(sideBtnMargin);
@@ -185,7 +190,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             }
         });
 
-        ImageButton ibLike = (ImageButton) findViewById(R.id.ib_like);
+        ibLike = (ImageButton) findViewById(R.id.ib_like);
         RelativeLayout.LayoutParams ibLLayoutParams = (RelativeLayout.LayoutParams) ibLike.getLayoutParams();
 
         ibLLayoutParams.setMarginStart(sideBtnMargin);
@@ -208,20 +213,15 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             @Override
             public void onClick(View v) {
                 if(!numberGrid.getAiMode()){
-                    touchLayer.setVisibility(View.GONE);
-                    ibAI.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
-                    numberGrid.setAiMode(true);
-                    mcAI.getBestMove();
+                    startAI();
                 }
                 else{
-                    touchLayer.setVisibility(View.VISIBLE);
-                    ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
-                    numberGrid.setAiMode(false);
+                    stopAI();
                 }
             }
         });
 
-        ImageButton ibHelp = (ImageButton) findViewById(R.id.ib_help);
+        ibHelp = (ImageButton) findViewById(R.id.ib_help);
 
         ibHelp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,9 +235,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     @Override
     public void resetGame(){
-        touchLayer.setVisibility(View.VISIBLE);
-        ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
-        numberGrid.setAiMode(false);
+        stopAI();
         score = 0;
         setScoreDisplay();
         numberGrid.init();
@@ -247,7 +245,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private void setTextTypeface(){
         TextView tvScoreTag = (TextView) findViewById(R.id.tv_score_tag);
-        TextView tvTitle = (TextView) findViewById(R.id.tv_title);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
 
         tvScoreTag.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
@@ -260,6 +258,60 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         TextView tvScore = (TextView) findViewById(R.id.tv_score);
         tvScore.setText(String.valueOf(score));
     }
+
+    private void startAI(){
+        touchLayer.setVisibility(View.GONE);
+        ibAI.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
+        numberGrid.setAiMode(true);
+        mcAI.getBestMove();
+        float transX, transY;
+        transX = ibHelp.getX() - ibAI.getX();
+        transY = ibHelp.getY() - ibAI.getY();
+        ViewAnimator.animate(ibRefresh, ibUndo, ibLike, ibHelp).alpha(1.f, 0.f).onStop(new AnimationListener.Stop() {
+            @Override
+            public void onStop() {
+                ibRefresh.setVisibility(View.INVISIBLE);
+                ibUndo.setVisibility(View.INVISIBLE);
+                ibHelp.setVisibility(View.INVISIBLE);
+                ibLike.setVisibility(View.INVISIBLE);
+            }
+        }).duration(Config.VIEW_FADE_DURATION)
+                .andAnimate(tvTitle).alpha(1.f, 0.f, 1.f).duration(2*Config.VIEW_FADE_DURATION).onStop(new AnimationListener.Stop() {
+            @Override
+            public void onStop() {
+                tvTitle.setText(R.string.title_ai_mode);
+            }
+        })
+                .thenAnimate(ibAI).translationX(transX).translationY(transY).duration(Config.VIEW_MOVE_DURATION)
+                .start();
+    }
+
+    private void stopAI(){
+        touchLayer.setVisibility(View.VISIBLE);
+        ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+        numberGrid.setAiMode(false);
+        float transX, transY;
+        transX = ibAI.getX() - ibHelp.getX();
+        transY = ibAI.getY() - ibHelp.getY();
+
+        ViewAnimator.animate(ibAI).translationX(transX).translationY(transY).duration(Config.VIEW_MOVE_DURATION)
+                .andAnimate(tvTitle).alpha(1.f, 0.f, 1.f).duration(2*Config.VIEW_FADE_DURATION).onStop(new AnimationListener.Stop() {
+            @Override
+            public void onStop() {
+                tvTitle.setText(R.string.title_player_mode);
+            }
+        })
+                .thenAnimate(ibRefresh, ibUndo, ibLike, ibHelp).alpha(0.f, 1.f).onStop(new AnimationListener.Stop() {
+            @Override
+            public void onStop() {
+                ibRefresh.setVisibility(View.VISIBLE);
+                ibUndo.setVisibility(View.VISIBLE);
+                ibLike.setVisibility(View.VISIBLE);
+                ibHelp.setVisibility(View.VISIBLE);
+            }
+        }).duration(Config.VIEW_FADE_DURATION).start();
+    }
+
 
     @Override
     public void updateScore(int score) {

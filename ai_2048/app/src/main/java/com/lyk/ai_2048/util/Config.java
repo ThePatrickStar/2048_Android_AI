@@ -7,4 +7,6 @@ public abstract class Config {
     public static final int MERGE_DURATION = 150;
     public static final int MOVE_DURATION = 200;
     public static final int GENERATE_DURATION = 150;
+    public static final int VIEW_FADE_DURATION = 150;
+    public static final int VIEW_MOVE_DURATION = 150;
 }

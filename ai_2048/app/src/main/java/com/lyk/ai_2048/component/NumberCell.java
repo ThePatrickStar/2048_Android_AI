@@ -1,7 +1,6 @@
 package com.lyk.ai_2048.component;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.widget.TextView;
@@ -69,7 +68,7 @@ public class NumberCell extends TextView {
             this.setText(String.valueOf(number));
             this.setTextColor(ContextCompat.getColor(getContext(),R.color.md_white_1000));
             if(number < 1000){
-                if(number <= 4){
+                if(number <= 100){
                     this.setTextColor(ContextCompat.getColor(getContext(),R.color.color_special_number));
                 }
                 this.setTextSize(25);

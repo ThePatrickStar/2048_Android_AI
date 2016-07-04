@@ -6,20 +6,21 @@
 
     <color name="color_special_number">#776e65</color>
 
-    <color name="color_2">#eee4da</color>
-    <color name="color_4">#ede0c8</color>
-    <color name="color_8">#f2b179</color>
-    <color name="color_16">#f59563</color>
-    <color name="color_32">#f67c5f</color>
-    <color name="color_64">#f65e3b</color>
-    <color name="color_128">#edcf72</color>
-    <color name="color_256">#edcc61</color>
-    <color name="color_512">#9c0</color>
-    <color name="color_1024">#33b5e5</color>
-    <color name="color_2048">#09c</color>
-    <color name="color_4096">#a6c</color>
-    <color name="color_8192">#93c</color>
+    <color name="color_2">#ddc7d3bf</color>
+    <color name="color_4">#ddd6e4ba</color>
+    <color name="color_8">#ddbbdb93</color>
+    <color name="color_16">#ddacc864</color>
+    <color name="color_32">#ddb4d6ad</color>
+    <color name="color_64">#dda3d0b5</color>
+    <color name="color_128">#dd72a75b</color>
+    <color name="color_256">#dd5d8d5d</color>
+    <color name="color_512">#dd8aa15f</color>
+    <color name="color_1024">#dd87a08b</color>
+    <color name="color_2048">#dd53bab8</color>
+    <color name="color_4096">#dd5c715e</color>
+    <color name="color_8192">#dd2e867d</color>
+    <color name="color_other">#dd000000</color>
 
-    <color name="color_grid">#bbada0</color>
-    <color name="color_cell">#ccc0b3</color>
+    <color name="color_grid">#b7b094</color>
+    <color name="color_cell">#e0dab8</color>
 </resources>
