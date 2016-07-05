@@ -8,7 +8,7 @@ public class InfoHolder {
     public static int deviceX, deviceY;
 
     public static int getGridPadding(){
-        return getGridSize()/50;
+        return getGridSize()/60;
     }
 
     public static int getGridSize(){
