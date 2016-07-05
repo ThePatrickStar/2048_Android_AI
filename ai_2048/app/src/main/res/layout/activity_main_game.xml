@@ -38,6 +38,7 @@
             android:layout_alignParentStart="true"/>
         <LinearLayout
             android:layout_centerInParent="true"
+            android:id="@+id/ll_score"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -54,8 +55,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_theme"/>
-
         </LinearLayout>
+        <TextView
+            android:id="@+id/tv_score_change"
+            android:layout_marginStart="@dimen/margin_between_contents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/color_theme"
+            android:layout_toEndOf="@id/ll_score"/>
         <ImageButton
             android:id="@+id/ib_undo"
             android:src="@drawable/ic_undo_white_24dp"

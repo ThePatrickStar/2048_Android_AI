@@ -36,8 +36,6 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
     private Grid grid;
     private NumberGrid numberGrid;
 
-    private int score = 0;
-
     private SweetAlertDialog sDialog;
 
     private ImageButton ibAI, ibRefresh, ibUndo, ibLike, ibHelp;
@@ -46,7 +44,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private TouchLayer touchLayer;
 
-    private TextView tvTitle;
+    private TextView tvTitle, tvScoreChange;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +88,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private void setUpUIComponents(){
 
-        setScoreDisplay();
+        setScoreDisplay(0, 0);
 
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.rl_main);
 
@@ -244,8 +242,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
     @Override
     public void resetGame(){
         stopAI();
-        score = 0;
-        setScoreDisplay();
+        setScoreDisplay(0, 0);
         numberGrid.init();
         numberGrid.generateNumber();
         numberGrid.generateNumber();
@@ -257,14 +254,23 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
         tvScoreTag.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
-
-
     }
 
 
-    private void setScoreDisplay(){
+    private void setScoreDisplay(int scoreNew, int scoreOld){
         TextView tvScore = (TextView) findViewById(R.id.tv_score);
-        tvScore.setText(String.valueOf(score));
+        tvScore.setText(String.valueOf(scoreNew));
+        if(scoreNew > scoreOld){
+            TextView tvScoreChange = (TextView) findViewById(R.id.tv_score_change);
+            tvScoreChange.setText("+"+String.valueOf(scoreNew-scoreOld));
+            ViewAnimator.animate(tvScoreChange).alpha(0.f, 1.f, 0.f).duration(2*Config.VIEW_FADE_DURATION).start();
+        }
+        else if(scoreNew < scoreOld){
+            TextView tvScoreChange = (TextView) findViewById(R.id.tv_score_change);
+            tvScoreChange.setText("-"+String.valueOf(scoreOld-scoreNew));
+            ViewAnimator.animate(tvScoreChange).alpha(0.f, 1.f, 0.f).duration(2*Config.VIEW_FADE_DURATION).start();
+        }
+
     }
 
     private void startAI(){
@@ -322,8 +328,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
 
     @Override
-    public void updateScore(int score) {
-        this.score = score;
-        setScoreDisplay();
+    public void updateScore(int scoreNew, int scoreOld) {
+        setScoreDisplay(scoreNew, scoreOld);
     }
 }

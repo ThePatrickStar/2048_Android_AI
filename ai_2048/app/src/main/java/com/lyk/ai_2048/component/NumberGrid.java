@@ -93,8 +93,8 @@ public class NumberGrid extends GridLayout {
     public void revertOneStep(){
         if(revertible){
             revertible = false;
+            gameHolder.updateScore(revertScore, score);
             score = revertScore;
-            gameHolder.updateScore(score);
             for(int i=0; i<4; i++){
                 for(int j=0; j<4; j++){
                     board[i][j] = revertBoard[i][j];
@@ -192,7 +192,6 @@ public class NumberGrid extends GridLayout {
                             board[i][k]+=board[i][j];
                             board[i][j]=0;
                             score += board[i][k];
-                            gameHolder.updateScore(score);
                             hasConflicted[i][k] = true;
                             break;
                         }
@@ -201,6 +200,7 @@ public class NumberGrid extends GridLayout {
             }
         }
 
+        gameHolder.updateScore(score, revertScore);
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
@@ -234,7 +234,6 @@ public class NumberGrid extends GridLayout {
                             board[i][k] *= 2;
                             board[i][j] = 0;
                             score += board[i][k];
-                            gameHolder.updateScore(score);
                             hasConflicted[i][k] = true;
                             break;
                         }
@@ -243,6 +242,7 @@ public class NumberGrid extends GridLayout {
             }
         }
 
+        gameHolder.updateScore(score, revertScore);
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
@@ -275,7 +275,6 @@ public class NumberGrid extends GridLayout {
                             board[k][j] *= 2;
                             board[i][j] = 0;
                             score += board[k][j];
-                            gameHolder.updateScore(score);
                             hasConflicted[k][j] = true;
                             break;
                         }
@@ -285,6 +284,7 @@ public class NumberGrid extends GridLayout {
             }
         }
 
+        gameHolder.updateScore(score, revertScore);
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
@@ -317,7 +317,6 @@ public class NumberGrid extends GridLayout {
                             board[k][j] *= 2;
                             board[i][j] = 0;
                             score += board[k][j];
-                            gameHolder.updateScore(score);
                             hasConflicted[k][j] = true;
                             break;
                         }
@@ -326,6 +325,7 @@ public class NumberGrid extends GridLayout {
             }
         }
 
+        gameHolder.updateScore(score, revertScore);
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
