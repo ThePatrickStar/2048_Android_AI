@@ -33,6 +33,7 @@ public class NumberGrid extends GridLayout {
     private boolean[][] hasConflicted;
     private int score;
     private int revertScore;
+    private int secondMove = -1;
 
     private GameHolder gameHolder;
 
@@ -442,13 +443,53 @@ public class NumberGrid extends GridLayout {
                         sDialog.show();
                     }
                     else if(aiMode){
-                        mcAI.getBestMove();
+                        // if no second move
+                        if(secondMove < 0){
+                            mcAI.getBestMove();
+                        }
+                        else{
+                            Log.d("MonteCarloAI", "performing second move: "+secondMove);
+                            performAMove(secondMove);
+                            secondMove = -1;
+                        }
                     }
                 }
             }).start();
 
             //Log.d(TAG, "generating a number at : "+cell.getRow()+", "+cell.getCol()+" --- "+randNum);
 
+        }
+    }
+
+    public void performBestMove(int bestMove){
+        Log.d("MonteCarloAI", "performing best move: "+bestMove);
+        if(bestMove < 4){
+            performAMove(bestMove);
+        }
+        else{
+            bestMove -= 4;
+            performAMove(bestMove/4);
+            this.secondMove = bestMove%4;
+        }
+    }
+
+    private void performAMove(int move){
+        switch (move) {
+            case 0:
+                this.moveUp();
+                break;
+            case 1:
+                this.moveDown();
+                break;
+            case 2:
+                this.moveLeft();
+                break;
+            case 3:
+                this.moveRight();
+                break;
+            default:
+                Log.d(TAG, "no best move!");
+                break;
         }
     }
 

@@ -148,45 +148,130 @@ public class LogicNumberGrid {
             }
         }
 
-        switch(move){
-            case 0:
-                if(!BoardUtil.canMoveUp(fakeBoard)) {
+        if(move < 4){
+            switch(move){
+                case 0:
+                    if(!BoardUtil.canMoveUp(fakeBoard)) {
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveUp();
+                    break;
+                case 1:
+                    if(!BoardUtil.canMoveDown(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveDown();
+                    break;
+                case 2:
+                    if(!BoardUtil.canMoveLeft(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveLeft();
+                    break;
+                case 3:
+                    if(!BoardUtil.canMoveRight(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveRight();
+                    break;
+                default:
+                    Log.d(TAG, "invalid move");
                     pair[0] = -1;
                     pair[1] = 0;
                     return pair;
-                }
-                fakeMoveUp();
-                break;
-            case 1:
-                if(!BoardUtil.canMoveDown(fakeBoard)){
-                    pair[0] = -1;
-                    pair[1] = 0;
-                    return pair;
-                }
-                fakeMoveDown();
-                break;
-            case 2:
-                if(!BoardUtil.canMoveLeft(fakeBoard)){
-                    pair[0] = -1;
-                    pair[1] = 0;
-                    return pair;
-                }
-                fakeMoveLeft();
-                break;
-            case 3:
-                if(!BoardUtil.canMoveRight(fakeBoard)){
-                    pair[0] = -1;
-                    pair[1] = 0;
-                    return pair;
-                }
-                fakeMoveRight();
-                break;
-            default:
-                Log.d(TAG, "invalid move");
-                pair[0] = -1;
-                pair[1] = 0;
-                return pair;
+            }
         }
+        else{
+            move -= 4;
+            int move1 = move/4, move2 = move%4;
+            switch(move1){
+                case 0:
+                    if(!BoardUtil.canMoveUp(fakeBoard)) {
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveUp();
+                    break;
+                case 1:
+                    if(!BoardUtil.canMoveDown(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveDown();
+                    break;
+                case 2:
+                    if(!BoardUtil.canMoveLeft(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveLeft();
+                    break;
+                case 3:
+                    if(!BoardUtil.canMoveRight(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveRight();
+                    break;
+                default:
+                    Log.d(TAG, "invalid move");
+                    pair[0] = -1;
+                    pair[1] = 0;
+                    return pair;
+            }
+            switch(move2){
+                case 0:
+                    if(!BoardUtil.canMoveUp(fakeBoard)) {
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveUp();
+                    break;
+                case 1:
+                    if(!BoardUtil.canMoveDown(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveDown();
+                    break;
+                case 2:
+                    if(!BoardUtil.canMoveLeft(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveLeft();
+                    break;
+                case 3:
+                    if(!BoardUtil.canMoveRight(fakeBoard)){
+                        pair[0] = -1;
+                        pair[1] = 0;
+                        return pair;
+                    }
+                    fakeMoveRight();
+                    break;
+                default:
+                    Log.d(TAG, "invalid move");
+                    pair[0] = -1;
+                    pair[1] = 0;
+                    return pair;
+            }
+        }
+
 
         while(!BoardUtil.isGameOver(fakeBoard)){
             double rand = Math.random();

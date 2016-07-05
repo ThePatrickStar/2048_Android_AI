@@ -12,7 +12,7 @@ import com.lyk.ai_2048.component.NumberGrid;
 public class MonteCarloAI {
     private static final String TAG = "MonteCarloAI";
     private NumberGrid numberGrid;
-    private static final int GAMES_PER_MOVE = 100, TARGET_STEP = 4;
+    private static final int GAMES_PER_MOVE = 100, TARGET_STEP = 20;
     private int currentStep;
     private RandomRun[] runs;
 
@@ -23,57 +23,31 @@ public class MonteCarloAI {
 
     public void getBestMove() {
         currentStep = 0;
-        runs = new RandomRun[4];
-        for(int i=0; i<4; i++){
+//        runs = new RandomRun[4];
+//        for(int i=0; i<4; i++){
+//            runs[i] = new RandomRun(i);
+//            runs[i].executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        }
+
+        runs = new RandomRun[TARGET_STEP];
+        for(int i=0; i<TARGET_STEP; i++){
             runs[i] = new RandomRun(i);
             runs[i].executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            //runs[i].start();
         }
-//        while(currentStep<TARGET_STEP){
-//
-//        }
-//        float bestScore = 0.f;
-//        int bestMove = -1;
-//        for(int i=0; i<4; i++){
-//            if(runs[i].getScore() >= bestScore){
-//                bestScore = runs[i].getScore();
-//                bestMove = runs[i].getMove();
-//            }
-//        }
-//        Log.d(TAG, "random best score: "+bestScore);
-//        switch (bestMove) {
-//            case 0:
-//                numberGrid.moveUp();
-//                break;
-//            case 1:
-//                numberGrid.moveDown();
-//                break;
-//            case 2:
-//                numberGrid.moveLeft();
-//                break;
-//            case 3:
-//                numberGrid.moveRight();
-//                break;
-//            default:
-//                Log.d(TAG, "no best move!");
-//                break;
-//        }
+
     }
 
     private void performMove(){
+//        Log.d(TAG, "performing move...");
         if(currentStep >= TARGET_STEP){
             currentStep = 0;
             float bestScore = 0.f, totalMoves = 0.f;
             int bestMove = -1;
-            for(int i=0; i<4; i++){
+            for(int i=0; i<TARGET_STEP; i++){
                 totalMoves += runs[i].getMoves();
-//                if(runs[i].getScore() >= bestScore){
-//                    bestScore = runs[i].getScore();
-//                    bestMove = runs[i].getMove();
-//                }
             }
 
-            for(int j=0; j<4; j++){
+            for(int j=0; j<TARGET_STEP; j++){
                 if(runs[j].getMoves()>0){
                     float ucb1Score = (float) (runs[j].getScore() + Math.sqrt((2*Math.log(totalMoves))/runs[j].getMoves()) );
                     if(ucb1Score >= bestScore){
@@ -84,23 +58,8 @@ public class MonteCarloAI {
             }
 
             Log.d(TAG, "random best score: "+bestScore);
-            switch (bestMove) {
-                case 0:
-                    numberGrid.moveUp();
-                    break;
-                case 1:
-                    numberGrid.moveDown();
-                    break;
-                case 2:
-                    numberGrid.moveLeft();
-                    break;
-                case 3:
-                    numberGrid.moveRight();
-                    break;
-                default:
-                    Log.d(TAG, "no best move!");
-                    break;
-            }
+            Log.d(TAG, "best move: "+bestMove);
+            numberGrid.performBestMove(bestMove);
         }
     }
 
@@ -138,13 +97,11 @@ public class MonteCarloAI {
             score/= GAMES_PER_MOVE;
             moves/= GAMES_PER_MOVE;
 
-            synchronized (this){
+            synchronized (MonteCarloAI.this){
                 currentStep++;
             }
 
-
-            //performMove();
-            Log.d(TAG, "finished random run: "+move);
+//          Log.d(TAG, "finished random run: "+move);
             return null;
         }
 

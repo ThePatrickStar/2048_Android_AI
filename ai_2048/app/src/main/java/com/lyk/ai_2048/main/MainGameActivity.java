@@ -270,7 +270,6 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             tvScoreChange.setText("-"+String.valueOf(scoreOld-scoreNew));
             ViewAnimator.animate(tvScoreChange).alpha(0.f, 1.f, 0.f).duration(2*Config.VIEW_FADE_DURATION).start();
         }
-
     }
 
     private void startAI(){
