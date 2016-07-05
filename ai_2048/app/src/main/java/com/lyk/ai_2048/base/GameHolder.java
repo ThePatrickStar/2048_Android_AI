@@ -5,5 +5,6 @@ package com.lyk.ai_2048.base;
  */
 public interface GameHolder {
     void updateScore(int scoreNew, int scoreOld);
+    void updateHighScore(int scoreNew, int scoreOld);
     void resetGame();
 }

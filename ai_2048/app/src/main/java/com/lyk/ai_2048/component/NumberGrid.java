@@ -15,6 +15,7 @@ import com.lyk.ai_2048.base.GameHolder;
 import com.lyk.ai_2048.util.BoardUtil;
 import com.lyk.ai_2048.util.Config;
 import com.lyk.ai_2048.util.InfoHolder;
+import com.lyk.ai_2048.util.PrefUtil;
 
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ public class NumberGrid extends GridLayout {
     private int[][] revertBoard;
     private boolean[][] hasConflicted;
     private int score;
+    private int highScore;
     private int revertScore;
     private int secondMove = -1;
 
@@ -47,18 +49,9 @@ public class NumberGrid extends GridLayout {
     private MonteCarloAI mcAI;
 
 
-    public NumberGrid(Context context) {
+    public NumberGrid(Context context, GameHolder gameHolder) {
         super(context);
-        setUpDisplay();
-    }
-
-    public NumberGrid(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setUpDisplay();
-    }
-
-    public NumberGrid(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this.gameHolder = gameHolder;
         setUpDisplay();
     }
 
@@ -71,7 +64,7 @@ public class NumberGrid extends GridLayout {
         this.setColumnCount(4);
         this.setRowCount(4);
 
-        init();
+        readSavedBoard();
     }
 
     public void init(){
@@ -89,6 +82,9 @@ public class NumberGrid extends GridLayout {
         }
 
         updateCells();
+
+        generateNumber();
+        generateNumber();
     }
 
     public void revertOneStep(){
@@ -103,6 +99,55 @@ public class NumberGrid extends GridLayout {
             }
             updateCells();
         }
+    }
+
+    public void saveBoard(){
+        String boardString = "";
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                boardString+=String.valueOf(board[i][j]);
+                if(i*4+j < 15){
+                    boardString+=":";
+                }
+            }
+        }
+        PrefUtil.setStringPreference(PrefUtil.BOARD, boardString, getContext());
+        PrefUtil.setIntPreference(PrefUtil.SCORE, score, getContext());
+        PrefUtil.setIntPreference(PrefUtil.HIGH_SCORE, highScore, getContext());
+    }
+
+    private void readSavedBoard(){
+        revertBoard = new int[4][4];
+        board = new int[4][4];
+        hasConflicted = new boolean[4][4];
+        revertible = false;
+
+        String boardString = PrefUtil.getStringPreference(
+                PrefUtil.BOARD, getContext()
+        );
+        if(boardString != null) {
+
+            String[] boardValues = boardString.split(":");
+            for (int i = 0; i < 16; i++) {
+                board[i/4][i%4] = Integer.valueOf(boardValues[i]);
+                revertBoard[i/4][i%4] = Integer.valueOf(boardValues[i]);
+            }
+
+            score = PrefUtil.getIntPreference(PrefUtil.SCORE, getContext());
+
+            revertScore = score;
+
+            gameHolder.updateScore(score, score);
+
+            updateCells();
+        }
+        else{
+            init();
+        }
+        highScore = PrefUtil.getIntPreference(PrefUtil.HIGH_SCORE, getContext());
+        highScore = highScore<0 ? 0:highScore;
+        gameHolder.updateHighScore(highScore, highScore);
+
     }
 
     private void saveState(){
@@ -202,6 +247,10 @@ public class NumberGrid extends GridLayout {
         }
 
         gameHolder.updateScore(score, revertScore);
+        if(score > highScore){
+            gameHolder.updateHighScore(score, highScore);
+            highScore = score;
+        }
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
@@ -244,6 +293,10 @@ public class NumberGrid extends GridLayout {
         }
 
         gameHolder.updateScore(score, revertScore);
+        if(score > highScore){
+            gameHolder.updateHighScore(score, highScore);
+            highScore = score;
+        }
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
@@ -286,6 +339,10 @@ public class NumberGrid extends GridLayout {
         }
 
         gameHolder.updateScore(score, revertScore);
+        if(score > highScore){
+            gameHolder.updateHighScore(score, highScore);
+            highScore = score;
+        }
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
@@ -327,6 +384,10 @@ public class NumberGrid extends GridLayout {
         }
 
         gameHolder.updateScore(score, revertScore);
+        if(score > highScore){
+            gameHolder.updateHighScore(score, highScore);
+            highScore = score;
+        }
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 

@@ -73,6 +73,12 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         super.onPause();
     }
 
+    @Override
+    protected void onStop() {
+        numberGrid.saveBoard();
+        super.onStop();
+    }
+
     private void setUpInfo(){
         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -93,7 +99,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.rl_main);
 
         grid = new Grid(this);
-        numberGrid = new NumberGrid(this);
+        numberGrid = new NumberGrid(this, this);
         numberGrid.setGameHolder(this);
         touchLayer = new TouchLayer(this);
         touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
@@ -123,10 +129,6 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         else {
             Log.d(TAG,"ll_main is null!");
         }
-
-
-        numberGrid.generateNumber();
-        numberGrid.generateNumber();
 
         mcAI = new MonteCarloAI(numberGrid);
 
@@ -244,8 +246,6 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         stopAI();
         setScoreDisplay(0, 0);
         numberGrid.init();
-        numberGrid.generateNumber();
-        numberGrid.generateNumber();
     }
 
     private void setTextTypeface(){
@@ -267,6 +267,21 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         }
         else if(scoreNew < scoreOld){
             TextView tvScoreChange = (TextView) findViewById(R.id.tv_score_change);
+            tvScoreChange.setText("-"+String.valueOf(scoreOld-scoreNew));
+            ViewAnimator.animate(tvScoreChange).alpha(0.f, 1.f, 0.f).duration(2*Config.VIEW_FADE_DURATION).start();
+        }
+    }
+
+    private void setHighScoreDisplay(int scoreNew, int scoreOld){
+        TextView tvScore = (TextView) findViewById(R.id.tv_high_score);
+        tvScore.setText(String.valueOf(scoreNew));
+        if(scoreNew > scoreOld){
+            TextView tvScoreChange = (TextView) findViewById(R.id.tv_high_score_change);
+            tvScoreChange.setText("+"+String.valueOf(scoreNew-scoreOld));
+            ViewAnimator.animate(tvScoreChange).alpha(0.f, 1.f, 0.f).duration(2*Config.VIEW_FADE_DURATION).start();
+        }
+        else if(scoreNew < scoreOld){
+            TextView tvScoreChange = (TextView) findViewById(R.id.tv_high_score_change);
             tvScoreChange.setText("-"+String.valueOf(scoreOld-scoreNew));
             ViewAnimator.animate(tvScoreChange).alpha(0.f, 1.f, 0.f).duration(2*Config.VIEW_FADE_DURATION).start();
         }
@@ -302,32 +317,40 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
     private void stopAI(){
         touchLayer.setVisibility(View.VISIBLE);
         ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
-        numberGrid.setAiMode(false);
-        float transX, transY;
-        transX = ibAI.getX() - ibHelp.getX();
-        transY = ibAI.getY() - ibHelp.getY();
+        if(numberGrid.getAiMode()){
+            numberGrid.setAiMode(false);
+            float transX, transY;
+            transX = ibAI.getX() - ibHelp.getX();
+            transY = ibAI.getY() - ibHelp.getY();
 
-        ViewAnimator.animate(ibAI).translationX(transX).translationY(transY).duration(Config.VIEW_MOVE_DURATION)
-                .andAnimate(tvTitle).alpha(1.f, 0.f, 1.f).duration(2*Config.VIEW_FADE_DURATION).onStop(new AnimationListener.Stop() {
-            @Override
-            public void onStop() {
-                tvTitle.setText(R.string.title_player_mode);
-            }
-        })
-                .thenAnimate(ibRefresh, ibUndo, ibLike, ibHelp).alpha(0.f, 1.f).onStop(new AnimationListener.Stop() {
-            @Override
-            public void onStop() {
-                ibRefresh.setVisibility(View.VISIBLE);
-                ibUndo.setVisibility(View.VISIBLE);
-                ibLike.setVisibility(View.VISIBLE);
-                ibHelp.setVisibility(View.VISIBLE);
-            }
-        }).duration(Config.VIEW_FADE_DURATION).start();
+            ViewAnimator.animate(ibAI).translationX(transX).translationY(transY).duration(Config.VIEW_MOVE_DURATION)
+                    .andAnimate(tvTitle).alpha(1.f, 0.f, 1.f).duration(2*Config.VIEW_FADE_DURATION).onStop(new AnimationListener.Stop() {
+                @Override
+                public void onStop() {
+                    tvTitle.setText(R.string.title_player_mode);
+                }
+            })
+                    .thenAnimate(ibRefresh, ibUndo, ibLike, ibHelp).alpha(0.f, 1.f).onStop(new AnimationListener.Stop() {
+                @Override
+                public void onStop() {
+                    ibRefresh.setVisibility(View.VISIBLE);
+                    ibUndo.setVisibility(View.VISIBLE);
+                    ibLike.setVisibility(View.VISIBLE);
+                    ibHelp.setVisibility(View.VISIBLE);
+                }
+            }).duration(Config.VIEW_FADE_DURATION).start();
+        }
+
     }
 
 
     @Override
     public void updateScore(int scoreNew, int scoreOld) {
         setScoreDisplay(scoreNew, scoreOld);
+    }
+
+    @Override
+    public void updateHighScore(int scoreNew, int scoreOld) {
+        setHighScoreDisplay(scoreNew, scoreOld);
     }
 }

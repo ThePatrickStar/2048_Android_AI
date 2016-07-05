@@ -14,4 +14,5 @@
 
     <!--<string name="tag_score"><![CDATA[ Score : <b><font color=#F44336>%1$d</b> ]]></string>-->
     <string name="tag_score">Score : </string>
+    <string name="tag_high_score">High Score : </string>
 </resources>
