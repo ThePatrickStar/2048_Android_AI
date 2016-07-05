@@ -67,6 +67,12 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     }
 
+    @Override
+    protected void onPause() {
+        stopAI();
+        super.onPause();
+    }
+
     private void setUpInfo(){
         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
