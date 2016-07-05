@@ -38,8 +38,8 @@
     <color name="color_8192">#4527A0</color>
     <color name="color_others">#000000</color>
 
-    <color name="color_grid">#424242</color>
-    <color name="color_cell">#EEEEEE</color>
+    <color name="color_grid">#00000000</color>
+    <color name="color_cell">#FFFDE7</color>
     <!--<color name="color_grid">#bbada0</color>-->
     <!--<color name="color_cell">#ccc0b3</color>-->
 </resources>

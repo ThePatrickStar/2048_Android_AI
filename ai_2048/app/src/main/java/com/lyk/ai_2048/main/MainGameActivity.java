@@ -69,7 +69,9 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     @Override
     protected void onPause() {
-        stopAI();
+        if(numberGrid.getAiMode()) {
+            stopAI();
+        }
         super.onPause();
     }
 
