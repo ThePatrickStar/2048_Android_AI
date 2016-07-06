@@ -268,7 +268,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         ibHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(MainGameActivity.this, HelpActivity.class));
             }
         });
 
