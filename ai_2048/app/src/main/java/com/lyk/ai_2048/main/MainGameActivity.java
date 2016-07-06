@@ -1,5 +1,6 @@
 package com.lyk.ai_2048.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +42,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private SweetAlertDialog sDialog;
 
-    private ImageButton ibAI, ibRefresh, ibUndo, ibLike, ibHelp;
+    private ImageButton ibAI, ibRefresh, ibUndo, ibSetting, ibHelp;
 
     private MonteCarloAI mcAI;
 
@@ -228,15 +229,15 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             }
         });
 
-        ibLike = (ImageButton) findViewById(R.id.ib_like);
-        RelativeLayout.LayoutParams ibLLayoutParams = (RelativeLayout.LayoutParams) ibLike.getLayoutParams();
+        ibSetting = (ImageButton) findViewById(R.id.ib_setting);
+        RelativeLayout.LayoutParams ibLLayoutParams = (RelativeLayout.LayoutParams) ibSetting.getLayoutParams();
 
         ibLLayoutParams.setMarginStart(sideBtnMargin);
 
-        ibLike.setOnClickListener(new View.OnClickListener() {
+        ibSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(MainGameActivity.this, SettingsActivity.class));
             }
         });
 
@@ -331,13 +332,13 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         float transX, transY;
         transX = ibHelp.getX() - ibAI.getX();
         transY = ibHelp.getY() - ibAI.getY();
-        ViewAnimator.animate(ibRefresh, ibUndo, ibLike, ibHelp).alpha(1.f, 0.f).onStop(new AnimationListener.Stop() {
+        ViewAnimator.animate(ibRefresh, ibUndo, ibSetting, ibHelp).alpha(1.f, 0.f).onStop(new AnimationListener.Stop() {
             @Override
             public void onStop() {
                 ibRefresh.setVisibility(View.INVISIBLE);
                 ibUndo.setVisibility(View.INVISIBLE);
                 ibHelp.setVisibility(View.INVISIBLE);
-                ibLike.setVisibility(View.INVISIBLE);
+                ibSetting.setVisibility(View.INVISIBLE);
             }
         }).duration(Config.VIEW_FADE_DURATION)
                 .andAnimate(tvTitle).alpha(1.f, 0.f, 1.f).duration(2*Config.VIEW_FADE_DURATION).onStop(new AnimationListener.Stop() {
@@ -366,12 +367,12 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
                     tvTitle.setText(R.string.title_player_mode);
                 }
             })
-                    .thenAnimate(ibRefresh, ibUndo, ibLike, ibHelp).alpha(0.f, 1.f).onStop(new AnimationListener.Stop() {
+                    .thenAnimate(ibRefresh, ibUndo, ibSetting, ibHelp).alpha(0.f, 1.f).onStop(new AnimationListener.Stop() {
                 @Override
                 public void onStop() {
                     ibRefresh.setVisibility(View.VISIBLE);
                     ibUndo.setVisibility(View.VISIBLE);
-                    ibLike.setVisibility(View.VISIBLE);
+                    ibSetting.setVisibility(View.VISIBLE);
                     ibHelp.setVisibility(View.VISIBLE);
                 }
             }).duration(Config.VIEW_FADE_DURATION).start();
