@@ -82,6 +82,12 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         super.onStop();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        numberGrid.setUpCellPositions();
+    }
+
     private void setUpInfo(){
         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -275,10 +281,14 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
     private void setTextTypeface(){
         TextView tvScoreTag = (TextView) findViewById(R.id.tv_score_tag);
         TextView tvHighScoreTag = (TextView) findViewById(R.id.tv_high_score_tag);
+        TextView tvScore = (TextView) findViewById(R.id.tv_score);
+        TextView tvHighScore = (TextView) findViewById(R.id.tv_high_score);
         tvTitle = (TextView) findViewById(R.id.tv_title);
 
         tvScoreTag.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvHighScoreTag.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvScore.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvHighScore.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
     }
 

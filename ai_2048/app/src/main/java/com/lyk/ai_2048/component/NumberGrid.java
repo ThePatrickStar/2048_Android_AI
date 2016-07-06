@@ -1,6 +1,7 @@
 package com.lyk.ai_2048.component;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Button;
@@ -31,6 +32,7 @@ public class NumberGrid extends GridLayout {
     private static final String TAG = "NumberGrid";
 
     private ArrayList<NumberCell> cells;
+    private ArrayList<Float[]> cellPositions;
     private int[][] board;
     private int[][] revertBoard;
     private boolean[][] hasConflicted;
@@ -162,45 +164,61 @@ public class NumberGrid extends GridLayout {
     }
 
     private void updateCells(){
-        this.removeAllViews();
+        // this.removeAllViews();
 
-        cells = new ArrayList<>();
+        if(cells == null) {
+            cells = new ArrayList<>();
+            cellPositions = new ArrayList<>();
 
-        int padding = InfoHolder.getGridPadding();
-        for (int i=0; i<4; i++){
-            for (int j=0; j<4; j++){
+            int padding = InfoHolder.getGridPadding();
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
 
-                NumberCell cell = new NumberCell(getContext());
+                    NumberCell cell = new NumberCell(getContext());
 
-                cell.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
+                    cell.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
 
-                GridLayout.LayoutParams gLayoutParams = new GridLayout.LayoutParams(GridLayout.spec(i, GridLayout.CENTER),
-                        GridLayout.spec(j, GridLayout.CENTER));
+                    GridLayout.LayoutParams gLayoutParams = new GridLayout.LayoutParams(GridLayout.spec(i, GridLayout.CENTER),
+                            GridLayout.spec(j, GridLayout.CENTER));
 
-                gLayoutParams.height = InfoHolder.getCellSize();
-                gLayoutParams.width = InfoHolder.getCellSize();
-
-
-                gLayoutParams.leftMargin = padding;
-                gLayoutParams.topMargin = padding;
-
-                if (i == 3)
-                    gLayoutParams.bottomMargin = padding;
-                if (j == 3)
-                    gLayoutParams.rightMargin = padding;
-
-                cell.setLayoutParams(gLayoutParams);
-
-                cell.setRow(i);
-                cell.setCol(j);
+                    gLayoutParams.height = InfoHolder.getCellSize();
+                    gLayoutParams.width = InfoHolder.getCellSize();
 
 
-                cell.setNumber(board[i][j]);
+                    gLayoutParams.leftMargin = padding;
+                    gLayoutParams.topMargin = padding;
 
-                this.addView(cell);
+                    if (i == 3)
+                        gLayoutParams.bottomMargin = padding;
+                    if (j == 3)
+                        gLayoutParams.rightMargin = padding;
 
-                cells.add(cell);
-                hasConflicted[i][j] = false;
+                    cell.setLayoutParams(gLayoutParams);
+
+                    cell.setRow(i);
+                    cell.setCol(j);
+
+
+                    cell.setNumber(board[i][j]);
+
+                    this.addView(cell);
+
+
+
+                    cells.add(cell);
+                    hasConflicted[i][j] = false;
+                }
+            }
+        }
+        else{
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    NumberCell cell = cells.get(i*4+j);
+                    cell.setX(cellPositions.get(i*4+j)[0]);
+                    cell.setY(cellPositions.get(i*4+j)[1]);
+                    cell.setNumber(board[i][j]);
+                    hasConflicted[i][j] = false;
+                }
             }
         }
 
@@ -564,6 +582,19 @@ public class NumberGrid extends GridLayout {
             default:
                 Log.d(TAG, "no best move!");
                 break;
+        }
+    }
+
+    public void setUpCellPositions(){
+        if(cellPositions.size() == 0) {
+            for (int i = 0; i < 16; i++) {
+                Float[] point = new Float[2];
+                NumberCell cell = cells.get(i);
+                point[0] = cell.getX();
+                point[1] = cell.getY();
+                cellPositions.add(point);
+                Log.d(TAG, "adding x: " + point[0] + " adding y: " + point[1]);
+            }
         }
     }
 

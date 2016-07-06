@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.widget.TextView;
 
 import com.lyk.ai_2048.R;
+import com.vstechlab.easyfonts.EasyFonts;
 
 /**
  * Created by lyk on 22/6/16.
@@ -18,7 +19,7 @@ public class NumberCell extends TextView {
         number = 0;
         this.setGravity(Gravity.CENTER);
         this.setTextColor(ContextCompat.getColor(context, R.color.md_white_1000));
-
+        this.setTypeface(EasyFonts.caviarDreamsBold(context));
         //this.setTypeface(null, Typeface.BOLD);
     }
 
@@ -65,6 +66,7 @@ public class NumberCell extends TextView {
         this.number = number;
         this.setBackgroundResource(getCellBg(number));
         if (number != 0){
+            this.setAlpha(1);
             this.setText(String.valueOf(number));
             this.setTextColor(ContextCompat.getColor(getContext(),R.color.md_white_1000));
             if(number < 1000){
