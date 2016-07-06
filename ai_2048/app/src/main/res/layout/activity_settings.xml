@@ -2,8 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_main"
-    android:paddingTop="@dimen/margin_whole_screen"
-    android:paddingBottom="@dimen/margin_whole_screen"
+    android:padding="@dimen/margin_whole_screen"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +10,7 @@
     android:background="@color/color_bg">
 
     <RelativeLayout
-        android:id="@+id/rl_bar"
+        android:id="@+id/rl_title_bar"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
@@ -23,6 +22,36 @@
             android:text="@string/title_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_body"
+        android:layout_below="@+id/rl_title_bar"
+        android:layout_marginTop="@dimen/margin_between_contents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/ib_ai_depth"
+                android:layout_width="@dimen/size_touchable_small"
+                android:layout_height="@dimen/size_touchable_small"
+                android:background="@android:color/transparent"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/tv_ai_depth"
+                android:layout_toEndOf="@id/ib_ai_depth"
+                android:layout_marginStart="@dimen/margin_between_contents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                android:text="@string/info_ai_depth"
+                android:textColor="@color/color_theme"
+                />
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout

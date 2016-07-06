@@ -10,6 +10,7 @@
     <string name="info_new_game">Reset and have a new game?</string>
     <string name="info_game_reseted">Enjoy your new game!</string>
     <string name="info_game_over">No more available move :(</string>
+    <string name="info_ai_depth">More Powerful AI\n(AI will try to look 2 steps further)</string>
 
     <string name="btn_confirm">Confirm</string>
     <string name="btn_cancel">Cancel</string>

@@ -25,6 +25,7 @@ import com.lyk.ai_2048.component.TouchLayer;
 import com.lyk.ai_2048.util.Config;
 import com.lyk.ai_2048.util.InfoHolder;
 import com.lyk.ai_2048.util.OnSwipeTouchListener;
+import com.lyk.ai_2048.util.PrefUtil;
 import com.vstechlab.easyfonts.EasyFonts;
 
 import org.w3c.dom.Text;
@@ -57,6 +58,8 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        Config.setAi2Steps(PrefUtil.getBooleanPreference(PrefUtil.AI_2_STEP, this));
 
         setContentView(R.layout.activity_main_game);
 

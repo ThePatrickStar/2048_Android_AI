@@ -14,6 +14,8 @@ public abstract class PrefUtil {
     // board is stored as a string "number:number:number..."
     public static final String BOARD = "board";
 
+    public static final String AI_2_STEP = "ai2Step";
+
     public static void clearPreference(Context context){
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = settings.edit();

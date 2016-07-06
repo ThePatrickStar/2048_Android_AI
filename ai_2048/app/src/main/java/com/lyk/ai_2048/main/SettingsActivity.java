@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.lyk.ai_2048.R;
+import com.lyk.ai_2048.util.Config;
+import com.lyk.ai_2048.util.PrefUtil;
 import com.vstechlab.easyfonts.EasyFonts;
 
 /**
@@ -36,10 +38,34 @@ public class SettingsActivity extends AppCompatActivity {
                 SettingsActivity.this.finish();
             }
         });
+        final ImageButton ibAIDepth = (ImageButton) findViewById(R.id.ib_ai_depth);
+        if(Config.isAi2Steps()){
+            ibAIDepth.setImageResource(R.drawable.ic_check_box_black_24dp);
+        }
+        else{
+            ibAIDepth.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
+        }
+        ibAIDepth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Config.isAi2Steps()){
+                    Config.setAi2Steps(false);
+                    PrefUtil.setBooleanPreference(PrefUtil.AI_2_STEP, false, getApplicationContext());
+                    ibAIDepth.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
+                }
+                else{
+                    Config.setAi2Steps(true);
+                    PrefUtil.setBooleanPreference(PrefUtil.AI_2_STEP, true, getApplicationContext());
+                    ibAIDepth.setImageResource(R.drawable.ic_check_box_black_24dp);
+                }
+            }
+        });
     }
 
     private void setTextTypeface(){
         TextView tvTitle = (TextView) findViewById(R.id.tv_title);
+        TextView tvAIDepth = (TextView) findViewById(R.id.tv_ai_depth);
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvAIDepth.setTypeface(EasyFonts.caviarDreamsBold(this));
     }
 }

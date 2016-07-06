@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.lyk.ai_2048.component.LogicNumberGrid;
 import com.lyk.ai_2048.component.NumberGrid;
+import com.lyk.ai_2048.util.Config;
 
 /**
  * Created by lyk on 3/7/16.
@@ -12,8 +13,8 @@ import com.lyk.ai_2048.component.NumberGrid;
 public class MonteCarloAI {
     private static final String TAG = "MonteCarloAI";
     private NumberGrid numberGrid;
-    private static final int GAMES_PER_MOVE = 100, TARGET_STEP = 20;
-    private int currentStep;
+    private static final int GAMES_PER_MOVE = 100;
+    private int currentStep, targetStep;
     private RandomRun[] runs;
 
     public MonteCarloAI(NumberGrid numberGrid) {
@@ -29,8 +30,13 @@ public class MonteCarloAI {
 //            runs[i].executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 //        }
 
-        runs = new RandomRun[TARGET_STEP];
-        for(int i=0; i<TARGET_STEP; i++){
+        if(Config.isAi2Steps())
+            targetStep = 20;
+        else
+            targetStep = 4;
+
+        runs = new RandomRun[targetStep];
+        for(int i=0; i<targetStep; i++){
             runs[i] = new RandomRun(i);
             runs[i].executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -39,15 +45,15 @@ public class MonteCarloAI {
 
     private void performMove(){
 //        Log.d(TAG, "performing move...");
-        if(currentStep >= TARGET_STEP){
+        if(currentStep >= targetStep){
             currentStep = 0;
             float bestScore = 0.f, totalMoves = 0.f;
             int bestMove = -1;
-            for(int i=0; i<TARGET_STEP; i++){
+            for(int i=0; i<targetStep; i++){
                 totalMoves += runs[i].getMoves();
             }
 
-            for(int j=0; j<TARGET_STEP; j++){
+            for(int j=0; j<targetStep; j++){
                 if(runs[j].getMoves()>0){
                     float ucb1Score = (float) (runs[j].getScore() + Math.sqrt((2*Math.log(totalMoves))/runs[j].getMoves()) );
                     if(ucb1Score >= bestScore){
