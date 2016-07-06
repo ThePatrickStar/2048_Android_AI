@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +25,8 @@ import com.lyk.ai_2048.util.Config;
 import com.lyk.ai_2048.util.InfoHolder;
 import com.lyk.ai_2048.util.OnSwipeTouchListener;
 import com.vstechlab.easyfonts.EasyFonts;
+
+import org.w3c.dom.Text;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -44,7 +47,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private TouchLayer touchLayer;
 
-    private TextView tvTitle, tvScoreChange;
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,7 +142,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             deviceSize = InfoHolder.getDeviceY();
         else
             deviceSize = InfoHolder.getDeviceX();
-        int sideBtnMargin = (deviceSize - InfoHolder.getGridSize())/2;
+        final int sideBtnMargin = (deviceSize - InfoHolder.getGridSize())/2;
 
         ibRefresh = (ImageButton) findViewById(R.id.ib_refresh);
         RelativeLayout.LayoutParams ibRLayoutParams = (RelativeLayout.LayoutParams) ibRefresh.getLayoutParams();
@@ -152,11 +155,15 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
             public void onClick(View v) {
                 sDialog = new SweetAlertDialog(MainGameActivity.this, SweetAlertDialog.WARNING_TYPE);
 
+
+
                 sDialog.setTitleText(getResources().getString(R.string.title_new_game));
                 sDialog.setContentText(getResources().getString(R.string.info_new_game));
                 sDialog.setConfirmText(getResources().getString(R.string.btn_confirm));
                 sDialog.setCancelText(getResources().getString(R.string.btn_cancel));
                 sDialog.setCancelable(false);
+
+
 
                 sDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
@@ -181,6 +188,23 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
                     }
                 });
                 sDialog.show();
+
+                Button btnConfirm = (Button) sDialog.findViewById(cn.pedant.SweetAlert.R.id.confirm_button);
+                Button btnCancel = (Button) sDialog.findViewById(cn.pedant.SweetAlert.R.id.cancel_button);
+                TextView tvTitle = (TextView) sDialog.findViewById(cn.pedant.SweetAlert.R.id.title_text);
+                TextView tvContent = (TextView) sDialog.findViewById(cn.pedant.SweetAlert.R.id.content_text);
+
+                if(btnConfirm!=null)
+                    btnConfirm.setTypeface(EasyFonts.caviarDreamsBold(getApplicationContext()));
+                if(btnCancel!=null)
+                    btnCancel.setTypeface(EasyFonts.caviarDreamsBold(getApplicationContext()));
+                if(tvTitle!=null)
+                    tvTitle.setTypeface(EasyFonts.caviarDreamsBold(getApplicationContext()));
+                if(tvContent!=null) {
+                    tvContent.setTypeface(EasyFonts.caviarDreamsBold(getApplicationContext()));
+                    Log.d(TAG, "tvContent is not null!");
+                } else
+                    Log.d(TAG, "tvContent is null!");
             }
         });
 
@@ -250,9 +274,11 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private void setTextTypeface(){
         TextView tvScoreTag = (TextView) findViewById(R.id.tv_score_tag);
+        TextView tvHighScoreTag = (TextView) findViewById(R.id.tv_high_score_tag);
         tvTitle = (TextView) findViewById(R.id.tv_title);
 
         tvScoreTag.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvHighScoreTag.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
     }
 

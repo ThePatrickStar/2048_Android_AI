@@ -6,11 +6,11 @@
     <string name="title_game_over">Game Over</string>
 
     <string name="info_new_game">Reset and have a new game?</string>
-    <string name="info_game_reseted">Enjoy your new name!</string>
+    <string name="info_game_reseted">Enjoy your new game!</string>
     <string name="info_game_over">No more available move :(</string>
 
-    <string name="btn_confirm">confirm</string>
-    <string name="btn_cancel">cancel</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_cancel">Cancel</string>
 
     <!--<string name="tag_score"><![CDATA[ Score : <b><font color=#F44336>%1$d</b> ]]></string>-->
     <string name="tag_score">Score : </string>

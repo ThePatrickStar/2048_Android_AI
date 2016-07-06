@@ -144,15 +144,4 @@
     </RelativeLayout>
 
 
-    <!--<com.lyk.ai_2048.component.Grid-->
-        <!--android:id="@+id/gl_main"-->
-        <!--android:background="@color/md_brown_500"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="400dp"-->
-        <!--android:columnCount="4"-->
-        <!--android:rowCount="4">-->
-    <!--</com.lyk.ai_2048.component.Grid>-->
-
-
 </RelativeLayout>

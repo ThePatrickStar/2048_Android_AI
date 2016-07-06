@@ -2,10 +2,11 @@ package com.lyk.ai_2048.component;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
@@ -16,6 +17,7 @@ import com.lyk.ai_2048.util.BoardUtil;
 import com.lyk.ai_2048.util.Config;
 import com.lyk.ai_2048.util.InfoHolder;
 import com.lyk.ai_2048.util.PrefUtil;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 
@@ -502,6 +504,17 @@ public class NumberGrid extends GridLayout {
                         });
 
                         sDialog.show();
+
+                        Button btnConfirm = (Button) sDialog.findViewById(cn.pedant.SweetAlert.R.id.confirm_button);
+                        TextView tvTitle = (TextView) sDialog.findViewById(cn.pedant.SweetAlert.R.id.title_text);
+                        TextView tvContent = (TextView) sDialog.findViewById(cn.pedant.SweetAlert.R.id.content_text);
+
+                        if(btnConfirm!=null)
+                            btnConfirm.setTypeface(EasyFonts.caviarDreamsBold(getContext()));
+                        if(tvTitle!=null)
+                            tvTitle.setTypeface(EasyFonts.caviarDreamsBold(getContext()));
+                        if(tvContent!=null)
+                            tvContent.setTypeface(EasyFonts.caviarDreamsBold(getContext()));
                     }
                     else if(aiMode){
                         // if no second move
