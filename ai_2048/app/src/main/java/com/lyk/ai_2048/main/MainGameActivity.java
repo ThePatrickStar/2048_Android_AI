@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.lyk.ai_2048.R;
 import com.lyk.ai_2048.ai.MonteCarloAI;
 import com.lyk.ai_2048.base.GameHolder;
@@ -51,6 +53,8 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     private TextView tvTitle;
 
+    private AdView adView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +73,17 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
         setTextTypeface();
 
+        setUpAdView();
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adView != null) {
+            adView.resume();;
+        }
     }
 
     @Override
@@ -77,7 +91,18 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         if(numberGrid.getAiMode()) {
             stopAI();
         }
+        if (adView != null) {
+            adView.pause();
+        }
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -90,6 +115,13 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         numberGrid.setUpCellPositions();
+    }
+
+    private void setUpAdView(){
+        adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("0782AD5F24AC63BA045110CEBC213342")
+                .build();
+        adView.loadAd(adRequest);
     }
 
     private void setUpInfo(){

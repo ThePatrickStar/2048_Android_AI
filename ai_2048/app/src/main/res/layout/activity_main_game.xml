@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_main"
     android:paddingTop="@dimen/margin_whole_screen"
-    android:paddingBottom="@dimen/margin_whole_screen"
-    android:orientation="vertical" 
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true"
@@ -113,10 +112,26 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_marginBottom="?attr/actionBarSize"
+        android:id="@+id/rl_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_theme">
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_main_footer">
+        </com.google.android.gms.ads.AdView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_above="@id/rl_banner"
+        android:layout_marginBottom="@dimen/margin_whole_screen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <ImageButton
             android:id="@+id/ib_setting"
             android:layout_width="@dimen/size_touchable"
@@ -142,6 +157,7 @@
             android:src="@drawable/ic_play_circle_outline_white_24dp"/>
 
     </RelativeLayout>
+
 
 
 </RelativeLayout>

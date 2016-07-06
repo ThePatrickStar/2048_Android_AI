@@ -38,5 +38,8 @@ dependencies {
     //text typeface
     compile 'com.vstechlab.easyfonts:easyfonts:1.0.0'
 
+    //ad mob
+    compile 'com.google.android.gms:play-services-ads:9.0.2'
+
 
 }

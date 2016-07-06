@@ -8,6 +8,8 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.lyk.ai_2048.R;
 import com.lyk.ai_2048.util.Config;
 import com.lyk.ai_2048.util.PrefUtil;
@@ -17,6 +19,9 @@ import com.vstechlab.easyfonts.EasyFonts;
  * Created by lyk on 6/7/16.
  */
 public class SettingsActivity extends AppCompatActivity {
+
+    private AdView adView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +33,32 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         setTextTypeface();
         setUpButtons();
+
+        setUpAdView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adView != null) {
+            adView.resume();;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if (adView != null) {
+            adView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
     }
 
     private void setUpButtons(){
@@ -67,5 +98,12 @@ public class SettingsActivity extends AppCompatActivity {
         TextView tvAIDepth = (TextView) findViewById(R.id.tv_ai_depth);
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvAIDepth.setTypeface(EasyFonts.caviarDreamsBold(this));
+    }
+
+    private void setUpAdView(){
+        adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("0782AD5F24AC63BA045110CEBC213342")
+                .build();
+        adView.loadAd(adRequest);
     }
 }

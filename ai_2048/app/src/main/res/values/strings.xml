@@ -21,4 +21,8 @@
     <!--<string name="tag_score"><![CDATA[ Score : <b><font color=#F44336>%1$d</b> ]]></string>-->
     <string name="tag_score">Score : </string>
     <string name="tag_high_score">High Score : </string>
+
+    <string name="banner_main_footer">ca-app-pub-4477445043607610/2555851282</string>
+    <string name="banner_setting_footer">ca-app-pub-4477445043607610/9660315685</string>
+    <string name="banner_help_footer">ca-app-pub-4477445043607610/2137048884</string>
 </resources>
