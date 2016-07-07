@@ -17,6 +17,7 @@
     <string name="info_slow_animation">Slower Animation Speed</string>
     <string name="info_normal_animation">Normal Animation Speed</string>
     <string name="info_fast_animation">Faster Animation Speed</string>
+    <string name="info_rate_app">Rate this app!</string>
 
     <string name="btn_confirm">Confirm</string>
     <string name="btn_cancel">Cancel</string>

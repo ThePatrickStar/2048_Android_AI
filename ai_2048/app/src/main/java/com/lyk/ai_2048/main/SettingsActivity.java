@@ -1,5 +1,7 @@
 package com.lyk.ai_2048.main;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,6 +23,8 @@ import com.vstechlab.easyfonts.EasyFonts;
 public class SettingsActivity extends AppCompatActivity {
 
     private AdView adView;
+
+    private static final String APP_PNAME = "com.lyk.ai_2048";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,6 +139,14 @@ public class SettingsActivity extends AppCompatActivity {
                 Config.setSpeedFactor((float)0.5);
             }
         });
+
+        ImageButton ibRateApp = (ImageButton) findViewById(R.id.ib_rate);
+        ibRateApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+APP_PNAME)));
+            }
+        });
     }
 
     private void setTextTypeface(){
@@ -143,12 +155,14 @@ public class SettingsActivity extends AppCompatActivity {
         TextView tvSlowAnim = (TextView) findViewById(R.id.tv_slow_animation);
         TextView tvNormalAnim = (TextView) findViewById(R.id.tv_normal_animation);
         TextView tvFastAnim = (TextView) findViewById(R.id.tv_fast_animation);
+        TextView tvRateApp = (TextView) findViewById(R.id.tv_rate);
 
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvAIDepth.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvSlowAnim.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvNormalAnim.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvFastAnim.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvRateApp.setTypeface(EasyFonts.caviarDreamsBold(this));
     }
 
     private void setUpAdView(){

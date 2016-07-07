@@ -137,6 +137,37 @@
                 />
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/color_theme"
+            android:layout_marginTop="@dimen/margin_whole_screen"/>
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/margin_between_contents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/ib_rate"
+                android:src="@drawable/ic_thumbs_up_down_white_24dp"
+                android:layout_width="@dimen/size_touchable_small"
+                android:layout_height="@dimen/size_touchable_small"
+                android:background="@drawable/bg_button"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/tv_rate"
+                android:layout_toEndOf="@id/ib_rate"
+                android:layout_marginStart="@dimen/margin_between_contents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                android:text="@string/info_rate_app"
+                android:textColor="@color/color_theme"
+                />
+        </RelativeLayout>
+
     </LinearLayout>
 
     <RelativeLayout
