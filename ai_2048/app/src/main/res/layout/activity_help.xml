@@ -24,15 +24,21 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_body"
+
+    <ScrollView
+        android:id="@+id/sv_body"
         android:layout_below="@+id/rl_title_bar"
         android:layout_marginTop="@dimen/margin_between_contents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin_whole_screen"
         android:layout_marginLeft="@dimen/margin_whole_screen">
-    </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_help_body"
+            android:text="@string/help_body"/>
+    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/rl_banner"

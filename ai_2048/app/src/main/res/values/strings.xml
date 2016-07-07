@@ -28,4 +28,14 @@
     <string name="banner_main_footer">ca-app-pub-4477445043607610/2555851282</string>
     <string name="banner_setting_footer">ca-app-pub-4477445043607610/9660315685</string>
     <string name="banner_help_footer">ca-app-pub-4477445043607610/2137048884</string>
+
+    <string name="help_body">Yet another 2048 game?\n
+        This is not simply another 2048 game with just a different looking!\n
+        This app has an integrated AI to play the game!\n
+        Click the button on the bottom right corner and let the AI roll out!\n\n
+        Known issue:\n
+        - Sometimes the AI may \"stuck\" without finishing the game. If this happens, pausing and restarting the AI will work.\n
+        - The AI is better to be used in winter. Why? Because it may cause your phone to generate heat :p. Nevertheless, the speed of the AI may vary from phone to phone.\n
+        - The \"More Powerful AI\" option may not give the AI a better performance in terms of scores earned. It\'s just theoretically better. \n
+    </string>
 </resources>

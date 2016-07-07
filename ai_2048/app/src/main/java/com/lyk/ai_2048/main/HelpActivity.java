@@ -73,7 +73,10 @@ public class HelpActivity extends AppCompatActivity {
 
     private void setTextTypeface(){
         TextView tvTitle = (TextView) findViewById(R.id.tv_title);
+        TextView tvHelpBody = (TextView) findViewById(R.id.tv_help_body);
+
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvHelpBody.setTypeface(EasyFonts.caviarDreamsBold(this));
     }
 
     private void setUpAdView(){
