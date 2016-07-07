@@ -63,7 +63,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Config.setAi2Steps(PrefUtil.getBooleanPreference(PrefUtil.AI_2_STEP, this));
+        setUpConfig();
 
         setContentView(R.layout.activity_main_game);
 
@@ -122,6 +122,30 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("0782AD5F24AC63BA045110CEBC213342")
                 .build();
         adView.loadAd(adRequest);
+    }
+
+    private void setUpConfig(){
+        Config.setAi2Steps(PrefUtil.getBooleanPreference(PrefUtil.AI_2_STEP, this));
+
+        String animSpeed = PrefUtil.getStringPreference(PrefUtil.ANIM_SPEED, this);
+
+        if(animSpeed == null){
+            Config.setSpeedFactor(1.f);
+        }
+        else{
+            switch (animSpeed) {
+                case PrefUtil.SLOW_ANIM:
+                    Config.setSpeedFactor((float) 1.5);
+                    break;
+                case PrefUtil.FAST_ANIM:
+                    Config.setSpeedFactor((float) 0.5);
+                    break;
+                default:
+                    Config.setSpeedFactor(1.f);
+                    break;
+            }
+        }
+
     }
 
     private void setUpInfo(){

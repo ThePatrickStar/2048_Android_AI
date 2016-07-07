@@ -419,7 +419,7 @@ public class NumberGrid extends GridLayout {
             float transY = endCells.get(i).getY() - startCells.get(i).getY();
 
             ViewAnimator.animate(startCells.get(i)).translationX(transX).translationY(transY)
-                    .duration(Config.MOVE_DURATION).onStop(new AnimationListener.Stop() {
+                    .duration((long)Config.getMoveDuration()).onStop(new AnimationListener.Stop() {
                 @Override
                 public void onStop() {
                     synchronized (this) {
@@ -451,7 +451,7 @@ public class NumberGrid extends GridLayout {
         for (Integer i : mergedCells){
             NumberCell mergedCell = cells.get(i);
             ViewAnimator.animate(mergedCell).scale(1.f, (float) 1.3, 1.f)
-                    .duration(Config.MERGE_DURATION).onStop(new AnimationListener.Stop() {
+                    .duration((long)Config.getMergeDuration()).onStop(new AnimationListener.Stop() {
                 @Override
                 public void onStop() {
                     synchronized (this) {
@@ -493,7 +493,7 @@ public class NumberGrid extends GridLayout {
 
             board[cell.getRow()][cell.getCol()] = randNum;
 
-            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration(Config.GENERATE_DURATION).onStop(new AnimationListener.Stop() {
+            ViewAnimator.animate(cell).scale(0, 1).alpha(0, 1).duration((long)Config.getGenerateDuration()).onStop(new AnimationListener.Stop() {
                 @Override
                 public void onStop() {
 

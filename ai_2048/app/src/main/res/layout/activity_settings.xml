@@ -24,8 +24,9 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_body"
+    <LinearLayout
+        android:id="@+id/ll_body"
+        android:orientation="vertical"
         android:layout_below="@+id/rl_title_bar"
         android:layout_marginTop="@dimen/margin_between_contents"
         android:layout_width="match_parent"
@@ -54,7 +55,89 @@
                 android:textColor="@color/color_theme"
                 />
         </RelativeLayout>
-    </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/color_theme"
+            android:layout_marginTop="@dimen/margin_whole_screen"/>
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/margin_between_contents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/ib_slow_animation"
+                android:src="@drawable/ic_radio_button_unchecked_black_24dp"
+                android:layout_width="@dimen/size_touchable_small"
+                android:layout_height="@dimen/size_touchable_small"
+                android:background="@android:color/transparent"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/tv_slow_animation"
+                android:layout_toEndOf="@id/ib_slow_animation"
+                android:layout_marginStart="@dimen/margin_between_contents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                android:text="@string/info_slow_animation"
+                android:textColor="@color/color_theme"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/margin_between_contents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/ib_normal_animation"
+                android:src="@drawable/ic_radio_button_unchecked_black_24dp"
+                android:layout_width="@dimen/size_touchable_small"
+                android:layout_height="@dimen/size_touchable_small"
+                android:background="@android:color/transparent"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/tv_normal_animation"
+                android:layout_toEndOf="@id/ib_normal_animation"
+                android:layout_marginStart="@dimen/margin_between_contents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                android:text="@string/info_normal_animation"
+                android:textColor="@color/color_theme"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/margin_between_contents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/ib_fast_animation"
+                android:src="@drawable/ic_radio_button_unchecked_black_24dp"
+                android:layout_width="@dimen/size_touchable_small"
+                android:layout_height="@dimen/size_touchable_small"
+                android:background="@android:color/transparent"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/tv_fast_animation"
+                android:layout_toEndOf="@id/ib_fast_animation"
+                android:layout_marginStart="@dimen/margin_between_contents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                android:text="@string/info_fast_animation"
+                android:textColor="@color/color_theme"
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rl_banner"

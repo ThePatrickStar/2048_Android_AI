@@ -16,6 +16,10 @@ public abstract class PrefUtil {
 
     public static final String AI_2_STEP = "ai2Step";
 
+    public static final String ANIM_SPEED = "anim_speed";
+
+    public static final String FAST_ANIM = "fast_anim", NORMAL_ANIM = "normal_anim", SLOW_ANIM = "slow_anim";
+
     public static void clearPreference(Context context){
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = settings.edit();

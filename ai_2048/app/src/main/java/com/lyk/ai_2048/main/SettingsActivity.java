@@ -91,13 +91,64 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        final ImageButton ibSlowAnim = (ImageButton) findViewById(R.id.ib_slow_animation);
+        final ImageButton ibNormalAnim = (ImageButton) findViewById(R.id.ib_normal_animation);
+        final ImageButton ibFastAnim = (ImageButton) findViewById(R.id.ib_fast_animation);
+
+        float speedFactor = Config.getSpeedFactor();
+
+        if(speedFactor == 0.5){
+            ibFastAnim.setImageResource(R.drawable.ic_radio_button_checked_black_24dp);
+        }
+        else if(speedFactor == 1.5){
+            ibSlowAnim.setImageResource(R.drawable.ic_radio_button_checked_black_24dp);
+        }
+        else{
+            ibNormalAnim.setImageResource(R.drawable.ic_radio_button_checked_black_24dp);
+        }
+
+        ibSlowAnim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ibSlowAnim.setImageResource(R.drawable.ic_radio_button_checked_black_24dp);
+                ibNormalAnim.setImageResource(R.drawable.ic_radio_button_unchecked_black_24dp);
+                ibFastAnim.setImageResource(R.drawable.ic_radio_button_unchecked_black_24dp);
+                Config.setSpeedFactor((float)1.5);
+            }
+        });
+        ibNormalAnim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ibSlowAnim.setImageResource(R.drawable.ic_radio_button_unchecked_black_24dp);
+                ibNormalAnim.setImageResource(R.drawable.ic_radio_button_checked_black_24dp);
+                ibFastAnim.setImageResource(R.drawable.ic_radio_button_unchecked_black_24dp);
+                Config.setSpeedFactor(1.f);
+            }
+        });
+        ibFastAnim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ibSlowAnim.setImageResource(R.drawable.ic_radio_button_unchecked_black_24dp);
+                ibNormalAnim.setImageResource(R.drawable.ic_radio_button_unchecked_black_24dp);
+                ibFastAnim.setImageResource(R.drawable.ic_radio_button_checked_black_24dp);
+                Config.setSpeedFactor((float)0.5);
+            }
+        });
     }
 
     private void setTextTypeface(){
         TextView tvTitle = (TextView) findViewById(R.id.tv_title);
         TextView tvAIDepth = (TextView) findViewById(R.id.tv_ai_depth);
+        TextView tvSlowAnim = (TextView) findViewById(R.id.tv_slow_animation);
+        TextView tvNormalAnim = (TextView) findViewById(R.id.tv_normal_animation);
+        TextView tvFastAnim = (TextView) findViewById(R.id.tv_fast_animation);
+
         tvTitle.setTypeface(EasyFonts.caviarDreamsBold(this));
         tvAIDepth.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvSlowAnim.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvNormalAnim.setTypeface(EasyFonts.caviarDreamsBold(this));
+        tvFastAnim.setTypeface(EasyFonts.caviarDreamsBold(this));
     }
 
     private void setUpAdView(){
