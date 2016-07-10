@@ -498,6 +498,9 @@ public class NumberGrid extends GridLayout {
                 public void onStop() {
 
                     if(emptyCells.size() == 1 && BoardUtil.isGameOver(board)){
+                        if(Math.random() < 0.6){
+                            gameHolder.showAd();
+                        }
                         sDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
 
                         sDialog.showCancelButton(false);

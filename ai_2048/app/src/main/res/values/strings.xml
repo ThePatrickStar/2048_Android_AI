@@ -29,6 +29,7 @@
     <string name="banner_main_footer">ca-app-pub-4477445043607610/2555851282</string>
     <string name="banner_setting_footer">ca-app-pub-4477445043607610/9660315685</string>
     <string name="banner_help_footer">ca-app-pub-4477445043607610/2137048884</string>
+    <string name="interstitial_game_over">ca-app-pub-4477445043607610/4281433288</string>
 
     <string name="help_body">Yet another 2048 game?\n
         This is not simply another 2048 game with just a different looking!\n

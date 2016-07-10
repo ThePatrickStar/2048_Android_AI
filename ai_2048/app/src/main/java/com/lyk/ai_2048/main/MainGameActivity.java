@@ -16,8 +16,10 @@ import android.widget.TextView;
 
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.lyk.ai_2048.R;
 import com.lyk.ai_2048.ai.MonteCarloAI;
 import com.lyk.ai_2048.base.GameHolder;
@@ -54,6 +56,9 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
     private TextView tvTitle;
 
     private AdView adView;
+
+    private InterstitialAd interstitialAd;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,12 +122,29 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         numberGrid.setUpCellPositions();
     }
 
+    private void showInterstitial(){
+        if(interstitialAd.isLoaded()){
+            interstitialAd.show();
+        }
+    }
+
     private void setUpAdView(){
         adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("0782AD5F24AC63BA045110CEBC213342")
                 .build();
         adView.loadAd(adRequest);
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_game_over));
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                showInterstitial();
+            }
+        });
     }
+
+
 
     private void setUpConfig(){
         Config.setAi2Steps(PrefUtil.getBooleanPreference(PrefUtil.AI_2_STEP, this));
@@ -440,6 +462,12 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
 
     }
 
+    @Override
+    public void showAd() {
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("0782AD5F24AC63BA045110CEBC213342")
+                .build();
+        interstitialAd.loadAd(adRequest);
+    }
 
     @Override
     public void updateScore(int scoreNew, int scoreOld) {
