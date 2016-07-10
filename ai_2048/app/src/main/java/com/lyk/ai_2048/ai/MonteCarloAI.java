@@ -23,6 +23,7 @@ public class MonteCarloAI {
     }
 
     public void getBestMove() {
+        System.gc();
         currentStep = 0;
 //        runs = new RandomRun[4];
 //        for(int i=0; i<4; i++){

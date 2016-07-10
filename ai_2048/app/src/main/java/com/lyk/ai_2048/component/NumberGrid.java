@@ -471,7 +471,7 @@ public class NumberGrid extends GridLayout {
     }
 
     public void generateNumber(){
-        ArrayList<NumberCell> emptyCells = new ArrayList<>();
+        final ArrayList<NumberCell> emptyCells = new ArrayList<>();
         for (NumberCell cell : cells){
             if (cell.getNumber() == 0){
                 emptyCells.add(cell);
@@ -497,7 +497,7 @@ public class NumberGrid extends GridLayout {
                 @Override
                 public void onStop() {
 
-                    if(BoardUtil.isGameOver(board)){
+                    if(emptyCells.size() == 1 && BoardUtil.isGameOver(board)){
                         sDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
 
                         sDialog.showCancelButton(false);

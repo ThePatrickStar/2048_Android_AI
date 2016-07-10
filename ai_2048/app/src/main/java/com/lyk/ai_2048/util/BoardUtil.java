@@ -83,7 +83,30 @@ public class BoardUtil {
     }
 
     public static boolean isGameOver(int[][] board){
-        return noSpace(board) && noMove(board);
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                if(board[i][j] != 0) {
+                    if (i > 0) {
+                        if (board[i-1][j]==0 || board[i][j] == board[i-1][j])
+                            return false;
+                    }
+                    if (i < 3) {
+                        if (board[i+1][j]==0 || board[i][j] == board[i+1][j])
+                            return false;
+                    }
+                    if (j > 0) {
+                        if (board[i][j-1]==0 || board[i][j] == board[i][j-1])
+                            return false;
+                    }
+                    if (j < 3) {
+                        if (board[i][j+1]==0 || board[i][j] == board[i][j+1])
+                            return false;
+                    }
+                }
+            }
+        }
+        return true;
+        //return noSpace(board) && noMove(board);
     }
 
 
