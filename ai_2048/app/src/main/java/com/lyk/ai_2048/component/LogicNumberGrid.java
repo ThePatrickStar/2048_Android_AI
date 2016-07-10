@@ -19,8 +19,6 @@ public class LogicNumberGrid {
 
 
     public void fakeMoveLeft(){
-        if(!canMoveLeft)
-            return;
 
         for(int i=0; i<4; i++){
             for(int j=1; j<4; j++){
@@ -47,9 +45,6 @@ public class LogicNumberGrid {
     }
 
     public void fakeMoveRight(){
-        if(!canMoveRight){
-            return;
-        }
 
         for( int i = 0; i < 4 ; i ++ ){
             for( int j = 2; j >= 0; j -- ){
@@ -76,9 +71,6 @@ public class LogicNumberGrid {
     }
 
     public void fakeMoveUp(){
-        if(!canMoveUp){
-            return;
-        }
 
         for(int j = 0 ; j < 4 ; j ++ ) {
             for (int i = 1; i < 4; i++) {
@@ -105,9 +97,6 @@ public class LogicNumberGrid {
     }
 
     public void fakeMoveDown(){
-        if(!canMoveDown){
-            return;
-        }
 
         for(int j = 0; j < 4; j++) {
             for (int i = 2; i >= 0; i--) {
@@ -146,11 +135,6 @@ public class LogicNumberGrid {
         }
 
         if(move < 4){
-            // set up for the first move
-            canMoveUp = true;
-            canMoveDown = true;
-            canMoveLeft = true;
-            canMoveRight = true;
             switch(move){
                 case 0:
                     if(!BoardUtil.canMoveUp(fakeBoard)) {
@@ -194,10 +178,6 @@ public class LogicNumberGrid {
         else{
             move -= 4;
             int move1 = move/4, move2 = move%4;
-            canMoveUp = true;
-            canMoveDown = true;
-            canMoveLeft = true;
-            canMoveRight = true;
             switch(move1){
                 case 0:
                     if(!BoardUtil.canMoveUp(fakeBoard)) {
@@ -280,20 +260,165 @@ public class LogicNumberGrid {
 
 
         while(!BoardUtil.isGameOver(fakeBoard)){
-            double rand = Math.random();
 
-            if(rand < 0.25){
-                fakeMoveUp();
-            }
-            else if (rand < 0.5){
-                fakeMoveDown();
-            }
-            else if (rand < 0.75){
-                fakeMoveLeft();
+            if(canMoveRight){
+                if(canMoveLeft){
+                    if(canMoveUp){
+                        if(canMoveDown){
+                            double rand = Math.random();
+                            if(rand < 0.25){
+                                fakeMoveUp();
+                            }
+                            else if (rand < 0.5){
+                                fakeMoveDown();
+                            }
+                            else if (rand < 0.75){
+                                fakeMoveLeft();
+                            }
+                            else{
+                                fakeMoveRight();
+                            }
+                        }
+                        else{
+                            double rand = Math.random();
+                            if(rand < (float)1/3){
+                                fakeMoveRight();
+                            }
+                            else if(rand < (float) 2/3){
+                                fakeMoveLeft();
+                            }
+                            else {
+                                fakeMoveUp();
+                            }
+                        }
+                    }
+                    else {
+                        if(canMoveDown){
+                            double rand = Math.random();
+                            if(rand < (float)1/3){
+                                fakeMoveRight();
+                            }
+                            else if(rand < (float) 2/3){
+                                fakeMoveLeft();
+                            }
+                            else {
+                                fakeMoveDown();
+                            }
+                        }
+                        else{
+                            double rand = Math.random();
+                            if(rand < 0.5){
+                                fakeMoveRight();
+                            }
+                            else{
+                                fakeMoveLeft();
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(canMoveUp){
+                        if(canMoveDown){
+                            double rand = Math.random();
+                            if(rand < (float)1/3){
+                                fakeMoveRight();
+                            }
+                            else if(rand < (float) 2/3){
+                                fakeMoveUp();
+                            }
+                            else {
+                                fakeMoveDown();
+                            }
+                        }
+                        else{
+                            double rand = Math.random();
+                            if(rand < 0.5){
+                                fakeMoveRight();
+                            }
+                            else{
+                                fakeMoveUp();
+                            }
+                        }
+                    }
+                    else {
+                        if(canMoveDown){
+                            double rand = Math.random();
+                            if(rand < 0.5){
+                                fakeMoveRight();
+                            }
+                            else{
+                                fakeMoveDown();
+                            }
+                        }
+                        else{
+                            fakeMoveRight();
+                        }
+                    }
+                }
             }
             else{
-                fakeMoveRight();
+                if(canMoveLeft){
+                    if(canMoveUp){
+                        if(canMoveDown){
+                            double rand = Math.random();
+                            if(rand < (float)1/3){
+                                fakeMoveLeft();
+                            }
+                            else if(rand < (float) 2/3){
+                                fakeMoveUp();
+                            }
+                            else {
+                                fakeMoveDown();
+                            }
+                        }
+                        else{
+                            double rand = Math.random();
+                            if(rand < 0.5){
+                                fakeMoveUp();
+                            }
+                            else{
+                                fakeMoveLeft();
+                            }
+                        }
+                    }
+                    else {
+                        if(canMoveDown){
+                            double rand = Math.random();
+                            if(rand < 0.5){
+                                fakeMoveLeft();
+                            }
+                            else{
+                                fakeMoveDown();
+                            }
+                        }
+                        else{
+                            fakeMoveLeft();
+                        }
+                    }
+                }
+                else{
+                    if(canMoveUp){
+                        if(canMoveDown){
+                            double rand = Math.random();
+                            if(rand < 0.5){
+                                fakeMoveUp();
+                            }
+                            else{
+                                fakeMoveDown();
+                            }
+                        }
+                        else{
+                            fakeMoveUp();
+                        }
+                    }
+                    else {
+                        if(canMoveDown){
+                            fakeMoveDown();
+                        }
+                    }
+                }
             }
+
         }
 
         pair[0] = fakeScore;
@@ -333,10 +458,7 @@ public class LogicNumberGrid {
                 }
             }
         }
-        if (emptyCells.size()==0){
-            Log.d(TAG, "no more available cells");
-        }
-        else{
+        if (emptyCells.size()!=0){
             int position = (int) (Math.random()*emptyCells.size());
             int randNum = Math.random() < 0.9 ? 2:4;
             fakeBoard[emptyCells.get(position)/4][emptyCells.get(position)%4] = randNum;
