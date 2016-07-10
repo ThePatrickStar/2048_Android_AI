@@ -43,7 +43,6 @@ public class LogicNumberGrid {
             }
         }
         fakeMoves++;
-        fakeUpdateCells();
         fakeGenerateNumber();
     }
 
@@ -73,7 +72,6 @@ public class LogicNumberGrid {
             }
         }
         fakeMoves++;
-        fakeUpdateCells();
         fakeGenerateNumber();
     }
 
@@ -103,7 +101,6 @@ public class LogicNumberGrid {
             }
         }
         fakeMoves++;
-        fakeUpdateCells();
         fakeGenerateNumber();
     }
 
@@ -132,7 +129,6 @@ public class LogicNumberGrid {
             }
         }
         fakeMoves++;
-        fakeUpdateCells();
         fakeGenerateNumber();
     }
 
@@ -305,15 +301,6 @@ public class LogicNumberGrid {
         return pair;
     }
 
-
-    public void fakeUpdateCells(){
-        for(int i= 0; i<4; i++){
-            for(int j=0; j<4; j++){
-                fakeHasConflicted[i][j] = false;
-            }
-        }
-    }
-
     public void fakeGenerateNumber(){
         ArrayList<Integer> emptyCells = new ArrayList<>();
         canMoveUp = false;
@@ -322,6 +309,7 @@ public class LogicNumberGrid {
         canMoveRight = false;
         for(int i=0; i<4; i++){
             for(int j=0; j<4; j++){
+                fakeHasConflicted[i][j] = false;
                 if(fakeBoard[i][j] != 0) {
                     if (i > 0) {
                         if (fakeBoard[i-1][j]==0 || fakeBoard[i][j] == fakeBoard[i-1][j])

@@ -174,19 +174,19 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         touchLayer.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeTop() {
                 Log.d(TAG, "swiped top");
-                numberGrid.moveUp();
+                numberGrid.moveUp(true);
             }
             public void onSwipeRight() {
                 Log.d(TAG, "swiped right");
-                numberGrid.moveRight();
+                numberGrid.moveRight(true);
             }
             public void onSwipeLeft() {
                 Log.d(TAG, "swiped left");
-                numberGrid.moveLeft();
+                numberGrid.moveLeft(true);
             }
             public void onSwipeBottom() {
                 Log.d(TAG, "swiped bottom");
-                numberGrid.moveDown();
+                numberGrid.moveDown(true);
             }
         });
 
@@ -414,6 +414,7 @@ public class MainGameActivity extends AppCompatActivity implements GameHolder {
         touchLayer.setVisibility(View.VISIBLE);
         ibAI.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
         if(numberGrid.getAiMode()){
+            numberGrid.saveState(true);
             numberGrid.setAiMode(false);
             float transX, transY;
             transX = ibAI.getX() - ibHelp.getX();

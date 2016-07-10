@@ -154,11 +154,14 @@ public class NumberGrid extends GridLayout {
 
     }
 
-    private void saveState(){
+    public void saveState(boolean need2Check){
         revertScore = score;
-        for(int i=0; i<4; i++){
-            for(int j=0; j<4; j++){
-                revertBoard[i][j] = board[i][j];
+
+        if(need2Check) {
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    revertBoard[i][j] = board[i][j];
+                }
             }
         }
     }
@@ -226,15 +229,15 @@ public class NumberGrid extends GridLayout {
 
     }
 
-    public void moveLeft(){
+    public void moveLeft(boolean need2Check){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
         ArrayList<Integer> mergedCells = new ArrayList<>();
-        if(!BoardUtil.canMoveLeft(this.board))
+        if(need2Check && !BoardUtil.canMoveLeft(this.board))
             return;
 
 
-        saveState();
+        saveState(need2Check);
 
         for(int i=0; i<4; i++){
             for(int j=1; j<4; j++){
@@ -274,15 +277,14 @@ public class NumberGrid extends GridLayout {
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
-    public void moveRight(){
+    public void moveRight(boolean need2Check){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
         ArrayList<Integer> mergedCells = new ArrayList<>();
-        if(!BoardUtil.canMoveRight(this.board))
+        if(need2Check && !BoardUtil.canMoveRight(this.board))
             return;
 
-
-        saveState();
+        saveState(need2Check);
 
         for( int i = 0; i < 4 ; i ++ ){
             for( int j = 2; j >= 0; j -- ){
@@ -320,15 +322,14 @@ public class NumberGrid extends GridLayout {
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
-    public void moveUp(){
+    public void moveUp(boolean need2Check){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
         ArrayList<Integer> mergedCells = new ArrayList<>();
-        if(!BoardUtil.canMoveUp(this.board))
+        if(need2Check && !BoardUtil.canMoveUp(this.board))
             return;
 
-
-        saveState();
+        saveState(need2Check);
 
         for(int j = 0 ; j < 4 ; j ++ ) {
             for (int i = 1; i < 4; i++) {
@@ -366,15 +367,14 @@ public class NumberGrid extends GridLayout {
         showMoveAnimations(startCells, endCells, mergedCells);
     }
 
-    public void moveDown(){
+    public void moveDown(boolean need2Check){
         ArrayList<NumberCell> startCells = new ArrayList<>();
         ArrayList<NumberCell> endCells = new ArrayList<>();
         ArrayList<Integer> mergedCells = new ArrayList<>();
-        if(!BoardUtil.canMoveDown(this.board))
+        if(need2Check && !BoardUtil.canMoveDown(this.board))
             return;
 
-
-        saveState();
+        saveState(need2Check);
 
         for(int j = 0; j < 4; j++) {
             for (int i = 2; i >= 0; i--) {
@@ -568,16 +568,16 @@ public class NumberGrid extends GridLayout {
     private void performAMove(int move){
         switch (move) {
             case 0:
-                this.moveUp();
+                this.moveUp(false);
                 break;
             case 1:
-                this.moveDown();
+                this.moveDown(false);
                 break;
             case 2:
-                this.moveLeft();
+                this.moveLeft(false);
                 break;
             case 3:
-                this.moveRight();
+                this.moveRight(false);
                 break;
             default:
                 Log.d(TAG, "no best move!");
