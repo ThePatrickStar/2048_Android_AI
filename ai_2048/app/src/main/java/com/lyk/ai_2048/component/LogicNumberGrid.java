@@ -15,10 +15,11 @@ public class LogicNumberGrid {
     private int[][] board, fakeBoard;
     private boolean[][] hasConflicted, fakeHasConflicted;
     private int score, fakeScore, fakeMoves;
+    private boolean canMoveRight, canMoveLeft, canMoveUp, canMoveDown;
 
 
     public void fakeMoveLeft(){
-        if(!BoardUtil.canMoveLeft(fakeBoard))
+        if(!canMoveLeft)
             return;
 
         for(int i=0; i<4; i++){
@@ -47,7 +48,7 @@ public class LogicNumberGrid {
     }
 
     public void fakeMoveRight(){
-        if(!BoardUtil.canMoveRight(fakeBoard)){
+        if(!canMoveRight){
             return;
         }
 
@@ -77,7 +78,7 @@ public class LogicNumberGrid {
     }
 
     public void fakeMoveUp(){
-        if(!BoardUtil.canMoveUp(fakeBoard)){
+        if(!canMoveUp){
             return;
         }
 
@@ -107,7 +108,7 @@ public class LogicNumberGrid {
     }
 
     public void fakeMoveDown(){
-        if(!BoardUtil.canMoveDown(fakeBoard)){
+        if(!canMoveDown){
             return;
         }
 
@@ -149,6 +150,11 @@ public class LogicNumberGrid {
         }
 
         if(move < 4){
+            // set up for the first move
+            canMoveUp = true;
+            canMoveDown = true;
+            canMoveLeft = true;
+            canMoveRight = true;
             switch(move){
                 case 0:
                     if(!BoardUtil.canMoveUp(fakeBoard)) {
@@ -192,6 +198,10 @@ public class LogicNumberGrid {
         else{
             move -= 4;
             int move1 = move/4, move2 = move%4;
+            canMoveUp = true;
+            canMoveDown = true;
+            canMoveLeft = true;
+            canMoveRight = true;
             switch(move1){
                 case 0:
                     if(!BoardUtil.canMoveUp(fakeBoard)) {
@@ -306,8 +316,30 @@ public class LogicNumberGrid {
 
     public void fakeGenerateNumber(){
         ArrayList<Integer> emptyCells = new ArrayList<>();
+        canMoveUp = false;
+        canMoveDown = false;
+        canMoveLeft = false;
+        canMoveRight = false;
         for(int i=0; i<4; i++){
             for(int j=0; j<4; j++){
+                if(fakeBoard[i][j] != 0) {
+                    if (i > 0) {
+                        if (fakeBoard[i-1][j]==0 || fakeBoard[i][j] == fakeBoard[i-1][j])
+                            canMoveUp = true;
+                    }
+                    if (i < 3) {
+                        if (fakeBoard[i+1][j]==0 || fakeBoard[i][j] == fakeBoard[i+1][j])
+                            canMoveDown = true;
+                    }
+                    if (j > 0) {
+                        if (fakeBoard[i][j-1]==0 || fakeBoard[i][j] == fakeBoard[i][j-1])
+                            canMoveLeft = true;
+                    }
+                    if (j < 3) {
+                        if (fakeBoard[i][j+1]==0 || fakeBoard[i][j] == fakeBoard[i][j+1])
+                            canMoveRight = true;
+                    }
+                }
                 if(fakeBoard[i][j] == 0){
                     emptyCells.add(i*4+j);
                 }
