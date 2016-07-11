@@ -81,7 +81,7 @@ public class HelpActivity extends AppCompatActivity {
 
     private void setUpAdView(){
         adView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("0782AD5F24AC63BA045110CEBC213342")
+        AdRequest adRequest = new AdRequest.Builder()
                 .build();
         adView.loadAd(adRequest);
     }
